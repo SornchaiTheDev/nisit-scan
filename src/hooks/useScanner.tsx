@@ -12,12 +12,15 @@ type ScanResult = {
 function useScanner() {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
+  const isNoCamera = cameras.length === 0;
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
     codeReader.listVideoInputDevices().then((videoInputDevices) => {
       setCameras(videoInputDevices);
+      if (videoInputDevices.length === 0) return;
       setSelectedCamera(videoInputDevices[0].deviceId);
     });
   }, []);
@@ -51,7 +54,8 @@ function useScanner() {
   );
 
   useEffect(() => {
-    if (scanResult.barcode === null) return;
+    if (scanResult.barcode === null || scanResult.barcode.length !== 14) return;
+
     const saveToDB = async () => {
       setSaveStatus("SAVING");
 
@@ -60,8 +64,10 @@ function useScanner() {
           status: "ALREADY_EXIST" | "NOT_FOUND";
         }>(`/api/barcode/${scanResult.barcode}`);
 
-        if (existRes.data.status === "ALREADY_EXIST")
+        if (existRes.data.status === "ALREADY_EXIST") {
+          setSaveStatus("IDLE");
           return toast.error("นิสิตลงทะเบียนไปแล้ว");
+        }
 
         const res = await axios.post("/api/save", scanResult);
 
@@ -98,6 +104,7 @@ function useScanner() {
     isScanSuccess,
     clearResult,
     saveStatus,
+    isNoCamera,
   };
 }
 
