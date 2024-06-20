@@ -51,7 +51,7 @@ export default function Home() {
                 onClick={clearResult}
                 className="w-full mt-4"
               >
-                ปิด
+                {saveStatus === "SAVING" ? "กำลังตรวจสอบ" : "ปิด"}
               </Button>
             </DialogFooter>
           </DialogHeader>
