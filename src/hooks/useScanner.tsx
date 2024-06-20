@@ -70,6 +70,7 @@ function useScanner() {
           toast.success("ลงทะเบียนนิสิตสำเร็จ");
         }
       } catch (err) {
+        setSaveStatus("IDLE");
         toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
       }
     };

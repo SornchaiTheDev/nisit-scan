@@ -35,7 +35,7 @@ export default function Home() {
       <Dialog open={isScanSuccess} onOpenChange={clearResult}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>แสกนสำเร็จ</DialogTitle>
+            <DialogTitle>ผลการแสกนบาร์โค้ด</DialogTitle>
             <h5 className="mt-4">หมายเลขบาร์โค้ด</h5>
             <h4 className="text-xl">{scanResult?.barcode}</h4>
 
