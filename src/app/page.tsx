@@ -65,11 +65,13 @@ export default function Home() {
             onValueChange={onChangeCameraSource}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="เลือกกล้อง" />
+              <SelectValue placeholder={selectedCamera ?? "เลือกกล้อง"} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {isNoCamera && <SelectLabel className="font-normal">ไม่พบกล้อง</SelectLabel>}
+                {isNoCamera && (
+                  <SelectLabel className="font-normal">ไม่พบกล้อง</SelectLabel>
+                )}
                 {cameras.map(({ deviceId, label }) => (
                   <SelectItem value={deviceId} key={deviceId}>
                     {label}
