@@ -16,6 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectLabel,
 } from "~/components/ui/select";
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
     isScanSuccess,
     clearResult,
     saveStatus,
+    isNoCamera,
   } = useScanner();
 
   return (
@@ -67,6 +69,7 @@ export default function Home() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
+                {isNoCamera && <SelectLabel className="font-normal">ไม่พบกล้อง</SelectLabel>}
                 {cameras.map(({ deviceId, label }) => (
                   <SelectItem value={deviceId} key={deviceId}>
                     {label}

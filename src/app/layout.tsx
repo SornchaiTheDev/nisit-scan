@@ -20,8 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Toaster richColors position="top-center" />
-      <body className={prompt.className}>{children}</body>
+      <body className={prompt.className}>
+        <Toaster
+          richColors
+          position="top-center"
+          toastOptions={{ className: "text-lg" }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
