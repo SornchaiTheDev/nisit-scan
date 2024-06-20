@@ -33,7 +33,7 @@ export default function Home() {
   } = useScanner();
 
   return (
-    <div className="flex flex-col justify-center h-screen p-4">
+    <div className="flex flex-col justify-center items-center h-screen p-4">
       <Dialog open={isScanSuccess} onOpenChange={clearResult}>
         <DialogContent>
           <DialogHeader>
