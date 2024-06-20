@@ -40,6 +40,8 @@ function useScanner() {
       videoRef.current,
       (result) => {
         if (result === null || scanResult.barcode !== null) return;
+        if (result.getText().length !== 14) return;
+
         setScanResult({
           barcode: result.getText(),
           timestamp: result.getTimestamp(),
@@ -54,7 +56,7 @@ function useScanner() {
   );
 
   useEffect(() => {
-    if (scanResult.barcode === null || scanResult.barcode.length !== 14) return;
+    if (scanResult.barcode === null) return;
 
     const saveToDB = async () => {
       setSaveStatus("SAVING");
