@@ -10,7 +10,7 @@ const apps = getApps();
 
 apps.length === 0
   ? initializeApp({
-      credential: admin.credential.cert(serviceAccount as ServiceAccount),
+    credential: admin.credential.cert(JSON.parse(serviceAccount) as ServiceAccount),
     })
   : apps[0];
 
