@@ -1,2 +1,2 @@
 export { createEventFn } from "./createEventFn";
-export { getEventById } from "./getEventById";
+export { removeEventFn } from "./removeEventFn";
