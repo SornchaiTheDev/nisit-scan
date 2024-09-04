@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Prompt } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "~/components/ui/sonner";
+import QueryWrapper from "~/wrapper/QueryWrapper";
 
 const prompt = Prompt({
-  subsets: ["thai"],
-  weight: ["100", "200", "300", "400", "500", "600"],
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -21,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={prompt.className}>
-        <Toaster
-          richColors
-          position="top-center"
-          toastOptions={{ className: "text-lg" }}
-        />
-        {children}
+        <QueryWrapper>
+          <Toaster
+            richColors
+            position="top-right"
+            toastOptions={{ className: "text-lg" }}
+          />
+          {children}
+        </QueryWrapper>
       </body>
     </html>
   );
