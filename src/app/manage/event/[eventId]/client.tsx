@@ -6,7 +6,7 @@ import "dayjs/locale/th";
 import { ArrowLeft, Hash, MapPin, Pencil, Search, User } from "lucide-react";
 import { DataTable } from "~/components/ui/data-table";
 import { participantsColumns } from "./columns/participants";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import { getParticipantsFn } from "~/requests/participants";
 import { Input } from "~/components/ui/input";
@@ -29,6 +29,7 @@ import { EventSchema } from "~/schemas/eventSchema";
 import { queryClient } from "~/wrapper/QueryWrapper";
 import { getEventFn } from "~/requests/event/getEventFn";
 import { Skeleton } from "~/components/ui/skeleton";
+import _ from "lodash";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -59,10 +60,16 @@ function EventClient({ id }: Props) {
   const day = _date.format("DD");
   const month = _date.format("MMM");
 
-  const { data: participants, isLoading: isPartiLoading } = useQuery({
+  const [search, setSearch] = useState("");
+
+  const {
+    data: participants,
+    isLoading: isPartiLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["participants", pagination],
     queryFn: () =>
-      getParticipantsFn(id, pagination.pageIndex, pagination.pageSize),
+      getParticipantsFn(id, search, pagination.pageIndex, pagination.pageSize),
   });
 
   const router = useRouter();
@@ -85,6 +92,19 @@ function EventClient({ id }: Props) {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const debouncedRefetch = useMemo(
+    () =>
+      _.debounce(() => {
+        refetch();
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+      }, 500),
+    [refetch],
+  );
+
+  useEffect(() => {
+    debouncedRefetch();
+  }, [search, debouncedRefetch]);
 
   return (
     <>
@@ -206,6 +226,8 @@ function EventClient({ id }: Props) {
           topSection={
             <div className="relative">
               <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="ค้นหาผู้เข้าร่วม"
                 className="max-w-[300px] pl-8"
               />
