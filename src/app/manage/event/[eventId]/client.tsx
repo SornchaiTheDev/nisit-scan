@@ -3,7 +3,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { removeEventFn } from "~/requests/event";
 import "dayjs/locale/th";
-import { ArrowLeft, Hash, MapPin, Pencil, Search, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Hash,
+  MapPin,
+  Pencil,
+  Search,
+  Trash,
+  User,
+} from "lucide-react";
 import { DataTable } from "~/components/ui/data-table";
 import { participantsColumns } from "./columns/participants";
 import { useEffect, useMemo, useState } from "react";
@@ -124,7 +132,12 @@ function EventClient({ id }: Props) {
             host,
             date: new Date(event?.date ?? ""),
           }}
-          triggerButton={<Button>แก้ไขอีเวนต์</Button>}
+          triggerButton={
+            <Button variant="outline" className="flex items-center gap-2">
+              <Pencil size="1rem" />
+              แก้ไขอีเวนต์
+            </Button>
+          }
           actionBtnContent={
             <>
               <Pencil size="1.25rem" />
@@ -138,7 +151,10 @@ function EventClient({ id }: Props) {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive">ลบอีเวนต์</Button>
+            <Button variant="destructive" className="flex items-center gap-2">
+              <Trash size="1rem" />
+              ลบอีเวนต์
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -155,13 +171,13 @@ function EventClient({ id }: Props) {
                   <User size="1rem" className="min-w-[1rem]" />
                   <h5 className="text-sm text-gray-600">ผู้รับผิดชอบ</h5>
                 </div>
-                <h3 className="text-lg font-medium">{host}</h3>
+                <h3 className="text-lg font-medium  text-gray-900">{host}</h3>
 
                 <div className="flex items-center gap-2">
                   <MapPin size="1rem" className="min-w-[1rem]" />
                   <h5 className="text-sm text-gray-600">สถานที่</h5>
                 </div>
-                <h3 className="text-lg">{place}</h3>
+                <h3 className="text-lg font-medium text-gray-900">{place}</h3>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex flex-col md:flex-row gap-1">

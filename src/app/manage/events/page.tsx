@@ -11,7 +11,7 @@ import { Button } from "~/components/ui/button";
 import EventDialog from "./components/EventDialog";
 import { createEventFn } from "~/requests/event";
 import { queryClient } from "~/wrapper/QueryWrapper";
-import { EventSchema } from "~/schemas/createEventSchema";
+import { EventSchema } from "~/schemas/eventSchema";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useState } from "react";
