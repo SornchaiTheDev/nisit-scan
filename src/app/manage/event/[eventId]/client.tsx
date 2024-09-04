@@ -74,18 +74,18 @@ function EventClient({ id, name, place, host, date }: Event) {
               </DialogTitle>
               <DialogDescription className="space-y-2">
                 <div className="flex items-center gap-2 mt-2">
-                  <Hash size="0.9rem" className="min-w-[1rem]" />
+                  <Hash size="1rem" className="min-w-[1rem]" />
                   <h5 className="text-sm text-gray-600">ชื่ออีเวนต์</h5>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900">{name}</h3>
                 <div className="flex items-center gap-2">
-                  <User size="0.9rem" className="min-w-[1rem]" />
+                  <User size="1rem" className="min-w-[1rem]" />
                   <h5 className="text-sm text-gray-600">ผู้รับผิดชอบ</h5>
                 </div>
                 <h3 className="text-lg font-medium">{host}</h3>
 
                 <div className="flex items-center gap-2">
-                  <MapPin size="0.9rem" className="min-w-[1rem]" />
+                  <MapPin size="1rem" className="min-w-[1rem]" />
                   <h5 className="text-sm text-gray-600">สถานที่</h5>
                 </div>
                 <h3 className="text-lg">{place}</h3>
@@ -112,20 +112,20 @@ function EventClient({ id, name, place, host, date }: Event) {
           <h6>{month}</h6>
         </div>
         <div className="space-y-2 flex-1">
-          <h5 className="text-xl font-medium">รายละเอียดอีเวนต์</h5>
+          <h5>รายละเอียดอีเวนต์</h5>
           <div className="flex items-center gap-2">
-            <Hash size="0.9rem" className="min-w-[1rem]" />
+            <Hash size="1rem" className="min-w-[1rem]" />
             <h5 className="text-sm text-gray-600">ชื่ออีเวนต์</h5>
           </div>
           <h3 className="text-lg font-medium text-gray-900">{name}</h3>
           <div className="flex items-center gap-2">
-            <User size="0.9rem" className="min-w-[1rem]" />
+            <User size="1rem" className="min-w-[1rem]" />
             <h5 className="text-sm text-gray-600">ผู้รับผิดชอบ</h5>
           </div>
           <h3 className="text-lg font-medium">{host}</h3>
 
           <div className="flex items-center gap-2">
-            <MapPin size="0.9rem" className="min-w-[1rem]" />
+            <MapPin size="1rem" className="min-w-[1rem]" />
             <h5 className="text-sm text-gray-600">สถานที่</h5>
           </div>
           <h3 className="text-lg">{place}</h3>
@@ -142,7 +142,7 @@ function EventClient({ id, name, place, host, date }: Event) {
               />
               <Search
                 className="absolute top-1/2 -translate-y-1/2 left-2"
-                size="0.9rem"
+                size="1rem"
               />
             </div>
           }
