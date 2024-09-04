@@ -13,7 +13,7 @@ function ManagePage() {
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
-      const res = await api.get<Event[]>("/event/all");
+      const res = await api.get<Event[]>("/events");
       return res.data;
     },
   });

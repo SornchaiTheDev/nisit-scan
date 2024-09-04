@@ -1,3 +1,11 @@
+export interface Participant {
+  id: string;
+  barcode: string;
+  timestamp: string;
+}
+
+interface Staff {}
+
 export interface Event {
   id: string;
   name: string;
@@ -5,6 +13,8 @@ export interface Event {
   date: string;
   host: string;
   owner: string;
+  staffs: Staff[];
+  participants: Participant[];
 }
 
 export interface CreateEventRequest {

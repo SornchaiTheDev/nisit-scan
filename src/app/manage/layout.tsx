@@ -7,9 +7,9 @@ export default function ManageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-gray-50 h-screen">
+    <div className="bg-gray-50 min-h-screen">
       <TopBar />
-      <div className="p-4 max-w-6xl container">{children}</div>
+      <div className="max-w-6xl container p-4">{children}</div>
     </div>
   );
 }
