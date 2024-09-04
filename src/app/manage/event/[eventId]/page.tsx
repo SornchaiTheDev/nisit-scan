@@ -17,7 +17,7 @@ async function EventPage({
     notFound();
   }
 
-  return <EventClient {...event} />;
+  return <EventClient id={eventId} />;
 }
 
 export default EventPage;

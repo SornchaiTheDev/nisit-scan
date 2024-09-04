@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 import { api } from "~/lib/axios";
-import { CreateEventSchema } from "~/schemas/createEventSchema";
-import type { CreateEventRequest } from "~/types/Event";
+import { EventSchema } from "~/schemas/eventSchema";
+import type { EventRequest } from "~/types/Event";
 
-export const createEventFn = async (event: CreateEventSchema) => {
-  const payload: CreateEventRequest = {
+export const createEventFn = async (event: EventSchema) => {
+  const payload: EventRequest = {
     ...event,
     date: dayjs(event.date).format("DD/MM/YYYY"),
   };

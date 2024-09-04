@@ -1,5 +1,3 @@
-"use client";
-
 import { CirclePlus } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { DatePicker } from "~/components/ui/datepicker";
@@ -14,65 +12,47 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  type CreateEventSchema,
-  createEventSchema,
-} from "~/schemas/createEventSchema";
+import { type EventSchema, eventSchema } from "~/schemas/eventSchema";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "~/wrapper/QueryWrapper";
-import { createEventFn } from "~/requests/event";
-import { AxiosError } from "axios";
-import { useState } from "react";
+import { type ReactNode } from "react";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
-export default function CreateEventDialog() {
-  const form = useForm<CreateEventSchema>({
-    resolver: zodResolver(createEventSchema),
-    defaultValues: {
+interface Props {
+  triggerButton: ReactNode;
+  handleOnSubmit: (formData: EventSchema) => Promise<void>;
+  isPending: boolean;
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+  initialData?: EventSchema;
+  actionBtnContent: ReactNode;
+}
+
+export default function EventDialog({
+  triggerButton,
+  handleOnSubmit,
+  isPending,
+  isOpen,
+  setIsOpen,
+  initialData,
+  actionBtnContent,
+}: Props) {
+  const form = useForm<EventSchema>({
+    resolver: zodResolver(eventSchema),
+    defaultValues: initialData ?? {
       name: "",
       date: new Date(),
       place: "",
-      owner: "",
     },
   });
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const createEvent = useMutation({
-    mutationFn: createEventFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-    },
-  });
-
-  const handleOnSubmit = async (formData: CreateEventSchema) => {
-    try {
-      await createEvent.mutateAsync(formData);
-      toast.success("สร้างอีเวนต์สำเร็จ");
-      setDialogOpen(false);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        const { response } = err;
-        if (response?.data.code === "EVENT_ALREADY_EXISTS") {
-          toast.error("เกิดข้อผิดพลาด", {
-            description: "อีเวนต์นี้มีอยู่แล้ว",
-          });
-        }
-      }
-    }
-  };
 
   const onSubmit = form.handleSubmit(handleOnSubmit);
 
-  const disabledSubmitButton = !form.formState.isValid || createEvent.isPending;
+  const disabledSubmitButton = !form.formState.isValid || isPending;
 
   return (
     <>
-      <Button onClick={() => setDialogOpen(true)} className="w-full gap-4 my-4">
-        <CirclePlus size="1.25rem" /> สร้างอีเวนต์ใหม่
-      </Button>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] flex flex-col">
           <DialogHeader>
             <DialogTitle>สร้างอีเวนต์ใหม่</DialogTitle>
@@ -129,8 +109,7 @@ export default function CreateEventDialog() {
                   type="submit"
                   className="gap-4"
                 >
-                  <CirclePlus size="1.25rem" />
-                  สร้าง
+                  {actionBtnContent}
                 </Button>
               </DialogFooter>
             </form>

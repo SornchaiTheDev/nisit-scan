@@ -17,10 +17,9 @@ export interface Event {
   participants: Participant[];
 }
 
-export interface CreateEventRequest {
+export interface EventRequest {
   name: string;
   place: string;
   date: string;
   host: string;
-  owner: string;
 }
