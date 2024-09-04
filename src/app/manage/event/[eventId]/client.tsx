@@ -14,6 +14,16 @@ import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Event } from "~/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 function EventClient({ id, name, place, host, date }: Event) {
   const _date = dayjs(date).locale("th");
@@ -42,7 +52,7 @@ function EventClient({ id, name, place, host, date }: Event) {
   });
 
   return (
-    <div>
+    <>
       <button
         className="flex gap-2 mt-2 mb-4 hover:text-gray-500"
         onClick={() => router.back()}
@@ -52,9 +62,49 @@ function EventClient({ id, name, place, host, date }: Event) {
       </button>
       <div className="flex justify-end gap-2 mb-2">
         <Button>แก้ไขอีเวนต์</Button>
-        <Button onClick={() => deleteEvent.mutate(id)} variant="destructive">
-          ลบอีเวนต์
-        </Button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="destructive">ลบอีเวนต์</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="font-medium">
+                คุณแน่ใจที่จะลบอีเวนต์นี้หรือไม่?
+              </DialogTitle>
+              <DialogDescription className="space-y-2">
+                <div className="flex items-center gap-2 mt-2">
+                  <Hash size="0.9rem" className="min-w-[1rem]" />
+                  <h5 className="text-sm text-gray-600">ชื่ออีเวนต์</h5>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">{name}</h3>
+                <div className="flex items-center gap-2">
+                  <User size="0.9rem" className="min-w-[1rem]" />
+                  <h5 className="text-sm text-gray-600">ผู้รับผิดชอบ</h5>
+                </div>
+                <h3 className="text-lg font-medium">{host}</h3>
+
+                <div className="flex items-center gap-2">
+                  <MapPin size="0.9rem" className="min-w-[1rem]" />
+                  <h5 className="text-sm text-gray-600">สถานที่</h5>
+                </div>
+                <h3 className="text-lg">{place}</h3>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex flex-col md:flex-row gap-1">
+              <DialogClose asChild>
+                <Button variant="secondary">ยกเลิก</Button>
+              </DialogClose>
+              <Button
+                variant="destructive"
+                onClick={() => deleteEvent.mutate(id)}
+                disabled={deleteEvent.isPending}
+              >
+                ลบอีเวนต์
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="flex flex-col md:flex-row gap-4 md:gap-10 items-start bg-white p-4 rounded-lg border border-slate-200">
         <div className="flex flex-col items-center">
@@ -103,7 +153,7 @@ function EventClient({ id, name, place, host, date }: Event) {
           {...{ pagination, setPagination }}
         />
       </div>
-    </div>
+    </>
   );
 }
 
