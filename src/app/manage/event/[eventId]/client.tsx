@@ -9,6 +9,7 @@ import {
   Hash,
   MapPin,
   Pencil,
+  Save,
   Search,
   Trash,
   User,
@@ -44,6 +45,8 @@ import { Skeleton } from "~/components/ui/skeleton";
 import _ from "lodash";
 import { Participant } from "~/types/Event";
 import { Table } from "@tanstack/react-table";
+import { TagsInput } from "react-tag-input-component";
+import { setStaffsFn } from "~/requests/staff";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -159,6 +162,22 @@ function EventClient({ id }: Props) {
     a.download = fileName;
     a.click();
   };
+
+  const [staffsInput, setStaffsInput] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isEventLoading) return;
+    const emails = event?.staffs.map((staff) => staff.email) ?? [];
+    setStaffsInput(emails);
+  }, [event?.staffs, isEventLoading]);
+
+
+  const setStaffs = useMutation({
+    mutationFn: (staffs: string[]) => setStaffsFn(id, staffs),
+    onSuccess: () => {
+      toast.success("เพิ่มเจ้าหน้าที่สำเร็จ");
+    },
+  });
 
   return (
     <>
@@ -281,6 +300,28 @@ function EventClient({ id }: Props) {
             <h3 className="text-lg">{place}</h3>
           )}
         </div>
+      </div>
+      <div className="w-full bg-white rounded-lg border border-slate-200 my-4 p-4">
+        <h5 className="text-sm text-gray-600">เจ้าหน้าที่</h5>
+        <div className="mt-2">
+          {isEventLoading ? (
+            <Skeleton className="w-full h-12" />
+          ) : (
+            <TagsInput
+              value={staffsInput}
+              onChange={setStaffsInput}
+              placeHolder="กรอกอีเมลเจ้าหน้าที่แล้ว Enter"
+            />
+          )}
+        </div>
+        <Button
+          className="flex gap-2 items-center mt-2"
+          size="sm"
+          onClick={() => setStaffs.mutate(staffsInput)}
+        >
+          <Save size="1rem" />
+          บันทึก
+        </Button>
       </div>
       <div className="mt-10">
         <h5 className="mb-4">ผู้เข้าร่วมงาน</h5>

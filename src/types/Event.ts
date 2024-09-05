@@ -4,7 +4,10 @@ export interface Participant {
   timestamp: string;
 }
 
-interface Staff {}
+interface Staff {
+  id: string;
+  email: string;
+}
 
 export interface Event {
   id: string;

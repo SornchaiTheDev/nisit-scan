@@ -92,6 +92,9 @@ importers:
       react-hook-form:
         specifier: ^7.53.0
         version: 7.53.0(react@18.3.1)
+      react-tag-input-component:
+        specifier: ^2.0.2
+        version: 2.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       sonner:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2610,6 +2613,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-tag-input-component@2.0.2:
+    resolution: {integrity: sha512-dydI9luVwwv9vrjE5u1TTnkcOVkOVL6mhFti8r6hLi78V2F2EKWQOLptURz79UYbDHLSk6tnbvGl8FE+sMpADg==}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
 
   react@16.14.0:
     resolution: {integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==}
@@ -6028,6 +6037,11 @@ snapshots:
       tslib: 2.6.3
     optionalDependencies:
       '@types/react': 18.3.3
+
+  react-tag-input-component@2.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react@16.14.0:
     dependencies:
