@@ -76,6 +76,7 @@ function EventClient({ id }: Props) {
   const _date = dayjs(event?.date).locale("th");
   const day = _date.format("DD");
   const month = _date.format("MMM");
+  const year = _date.format("YYYY");
 
   const [search, setSearch] = useState("");
 
@@ -171,7 +172,6 @@ function EventClient({ id }: Props) {
     setStaffsInput(emails);
   }, [event?.staffs, isEventLoading]);
 
-
   const setStaffs = useMutation({
     mutationFn: (staffs: string[]) => setStaffsFn(id, staffs),
     onSuccess: () => {
@@ -266,7 +266,9 @@ function EventClient({ id }: Props) {
         ) : (
           <div className="flex flex-col items-center">
             <h5 className="font-medium text-4xl">{day}</h5>
-            <h6>{month}</h6>
+            <h6>
+              {month} {year}
+            </h6>
           </div>
         )}
         <div className="space-y-2 flex-1">
