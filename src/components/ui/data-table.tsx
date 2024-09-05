@@ -1,13 +1,15 @@
 import {
   ColumnDef,
   OnChangeFn,
+  RowData,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type Table,
 } from "@tanstack/react-table";
 
 import {
-  Table,
+  Table as TableUI,
   TableBody,
   TableCell,
   TableHead,
@@ -18,6 +20,19 @@ import { Button } from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "./skeleton";
 import { ReactNode } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    deleteRows: (row: TData) => void;
+  }
+}
 
 interface Pagination {
   pageIndex: number;
@@ -30,7 +45,7 @@ interface DataTableProps<TData, TValue> {
   setPagination: OnChangeFn<Pagination>;
   totalRows: number;
   isLoading?: boolean;
-  topSection: ReactNode;
+  topSection?: (table: Table<TData>) => ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -56,9 +71,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      {topSection}
+      {typeof topSection === "function" && topSection(table)}
       <div className="rounded-md border mt-4 bg-white">
-        <Table>
+        <TableUI>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -113,30 +128,55 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronRight />
-          </Button>
+        </TableUI>
+        <div className="flex items-center justify-between space-x-2 p-2 border-t">
+          <h6 className="text-xs">
+            แสดง {pagination.pageIndex * pagination.pageSize + 1}-
+            {(pagination.pageIndex + 1) * pagination.pageSize} จาก{" "}
+            {table.getRowCount()} รายการ
+          </h6>
+          <div className="flex gap-2 items-center">
+            <h6 className="text-xs">แสดงหน้าละ</h6>
+            <Select
+              onValueChange={(value) =>
+                setPagination((prev) => ({
+                  ...prev,
+                  pageSize: parseInt(value),
+                }))
+              }
+            >
+              <SelectTrigger className="w-[80px]">
+                <SelectValue placeholder="10" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <SelectItem key={i} value={((i + 1) * 10).toString()}>
+                    {(i + 1) * 10}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="space-x-2 flex items-center">
+              <Button
+                variant="ghost"
+                className="w-6 h-6"
+                size="icon"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <ChevronLeft />
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-6 h-6"
+                size="icon"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <ChevronRight />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </>

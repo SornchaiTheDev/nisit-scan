@@ -1,1 +1,2 @@
-export { getParticipantsFn } from "./getParticipants";
+export { getParticipantsFn } from "./getParticipantsFn";
+export { removeParticipantFn } from "./removeParticipantFn";

@@ -5,6 +5,7 @@ import { removeEventFn } from "~/requests/event";
 import "dayjs/locale/th";
 import {
   ArrowLeft,
+  Download,
   Hash,
   MapPin,
   Pencil,
@@ -16,7 +17,10 @@ import { DataTable } from "~/components/ui/data-table";
 import { participantsColumns } from "./columns/participants";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { getParticipantsFn } from "~/requests/participants";
+import {
+  getParticipantsFn,
+  removeParticipantFn,
+} from "~/requests/participants";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -38,6 +42,8 @@ import { queryClient } from "~/wrapper/QueryWrapper";
 import { getEventFn } from "~/requests/event/getEventFn";
 import { Skeleton } from "~/components/ui/skeleton";
 import _ from "lodash";
+import { Participant } from "~/types/Event";
+import { Table } from "@tanstack/react-table";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -113,6 +119,46 @@ function EventClient({ id }: Props) {
   useEffect(() => {
     debouncedRefetch();
   }, [search, debouncedRefetch]);
+
+  const deleteParticipant = useMutation({
+    mutationFn: (ids: string[]) => removeParticipantFn(id, ids),
+    onSuccess: () => {
+      toast.success("ลบผู้เข้าร่วมสำเร็จ");
+      queryClient.invalidateQueries({ queryKey: ["participants", pagination] });
+    },
+  });
+
+  const handleOnDeleteRows = (table: Table<Participant>) => {
+    const rows = table
+      .getFilteredSelectedRowModel()
+      .rows.map((row) => row.original);
+
+    const ids = rows.map((row) => row.id);
+
+    deleteParticipant.mutate(ids);
+    table.resetRowSelection();
+  };
+
+  const noParticipants = participants?.participants.length === 0;
+  const handleExportAsCSV = () => {
+    if (participants === undefined) return;
+
+    const csv = participants.participants
+      .map(
+        ({ barcode, timestamp }) =>
+          `${barcode},${dayjs(timestamp).format("DD/MM/YYYY HH:mm:ss")}`,
+      )
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    const fileName = `${name.replace(/\s/g, "_")}_${day}_${month}_participants.csv`;
+    a.download = fileName;
+    a.click();
+  };
 
   return (
     <>
@@ -239,20 +285,52 @@ function EventClient({ id }: Props) {
       <div className="mt-10">
         <h5 className="mb-4">ผู้เข้าร่วมงาน</h5>
         <DataTable
-          topSection={
-            <div className="relative">
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="ค้นหาผู้เข้าร่วม"
-                className="max-w-[300px] pl-8"
-              />
-              <Search
-                className="absolute top-1/2 -translate-y-1/2 left-2"
-                size="1rem"
-              />
+          topSection={(table) => (
+            <div className="flex justify-between items-center">
+              <div className="flex gap-4 items-center">
+                <div className="relative">
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="ค้นหาผู้เข้าร่วม"
+                    className="max-w-[300px] pl-8"
+                  />
+                  <Search
+                    className="absolute top-1/2 -translate-y-1/2 left-2"
+                    size="1rem"
+                  />
+                </div>
+                <h6 className="text-sm text-gray-700">
+                  เลือกทั้งหมด {table.getFilteredSelectedRowModel().rows.length}{" "}
+                  แถว
+                </h6>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Button
+                  disabled={
+                    table.getFilteredSelectedRowModel().rows.length === 0
+                  }
+                  onClick={() => handleOnDeleteRows(table)}
+                  size="icon"
+                  className="w-8 h-8"
+                  variant="outline"
+                >
+                  <Trash size="1rem" />
+                </Button>
+                <Button
+                  disabled={noParticipants}
+                  onClick={handleExportAsCSV}
+                  variant="outline"
+                  size="sm"
+                  className="h-8 font-normal flex items-center gap-2"
+                >
+                  <Download size="1rem" />
+                  Export as CSV
+                </Button>
+              </div>
             </div>
-          }
+          )}
           isLoading={isPartiLoading}
           totalRows={participants?.totalRows ?? 0}
           columns={participantsColumns}

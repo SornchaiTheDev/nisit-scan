@@ -38,19 +38,4 @@ export const participantsColumns: ColumnDef<Participant>[] = [
     cell: ({ row }) =>
       dayjs(row.getValue("timestamp")).format("DD/MM/YYYY HH:mm:ss"),
   },
-  {
-    id: "delete",
-    header: "จัดการ",
-    cell: ({ row }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => row.toggleSelected(true)}
-          className="w-8 h-8 p-2"
-        >
-          <Trash2 className="text-red-500" />
-        </Button>
-      );
-    },
-  },
 ];
