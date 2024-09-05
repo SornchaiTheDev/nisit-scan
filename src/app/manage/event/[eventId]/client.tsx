@@ -310,6 +310,7 @@ function EventClient({ id }: Props) {
             <Skeleton className="w-full h-12" />
           ) : (
             <TagsInput
+              separators={[",", "\n"]}
               value={staffsInput}
               onChange={setStaffsInput}
               placeHolder="กรอกอีเมลเจ้าหน้าที่แล้ว Enter"
