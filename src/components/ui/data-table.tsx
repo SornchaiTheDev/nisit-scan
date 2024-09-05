@@ -131,9 +131,17 @@ export function DataTable<TData, TValue>({
         </TableUI>
         <div className="flex items-center justify-between space-x-2 p-2 border-t">
           <h6 className="text-xs">
-            แสดง {pagination.pageIndex * pagination.pageSize + 1}-
-            {(pagination.pageIndex + 1) * pagination.pageSize} จาก{" "}
-            {table.getRowCount()} รายการ
+            แสดง{" "}
+            {Math.min(
+              pagination.pageIndex * pagination.pageSize + 1,
+              table.getRowCount(),
+            )}
+            -
+            {Math.min(
+              (pagination.pageIndex + 1) * pagination.pageSize,
+              table.getRowCount(),
+            )}{" "}
+            จาก {table.getRowCount()} รายการ
           </h6>
           <div className="flex gap-2 items-center">
             <h6 className="text-xs">แสดงหน้าละ</h6>
