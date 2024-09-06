@@ -16,6 +16,7 @@ import { Admin } from "~/types";
 import AdminDialog from "./_components/AdminDialog";
 import { toast } from "sonner";
 import { queryClient } from "~/wrapper/QueryWrapper";
+import { AxiosError, AxiosHeaders } from "axios";
 
 function ManageStaffPage() {
   const [search, setSearch] = useState("");
@@ -55,6 +56,13 @@ function ManageStaffPage() {
       setIsOpen(false);
       toast.success("เพิ่มแอดมินสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["admins", pagination] });
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.data.code === "ADMIN_ALREADY_EXISTS") {
+          toast.error("อีเมลล์นี้มีอยู่ในระบบแล้ว");
+        }
+      }
     },
   });
 
