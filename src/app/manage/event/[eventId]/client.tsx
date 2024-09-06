@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Download,
   Hash,
+  Link,
   MapPin,
   Pencil,
   Save,
@@ -47,6 +48,7 @@ import { Participant } from "~/types/Event";
 import { Table } from "@tanstack/react-table";
 import { TagsInput } from "react-tag-input-component";
 import { setStaffsFn } from "~/requests/staff";
+import CopyLinkButton from "./_components/CopyLinkButton";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -189,6 +191,7 @@ function EventClient({ id }: Props) {
         ย้อนกลับ
       </button>
       <div className="flex justify-end gap-2 mb-2">
+        <CopyLinkButton link={`${process.env.NEXT_PUBLIC_URL}/event/${id}`} />
         <EventDialog
           key={event?.id}
           initialData={{
