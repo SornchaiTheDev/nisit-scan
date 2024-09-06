@@ -13,7 +13,7 @@ function Hamburger() {
 
   const router = useRouter();
   return (
-    <div className="fixed left-0 right-0 z-50 bg-white p-2 shadow-sm rounded-b-lg">
+    <div className="fixed left-0 right-0 z-40 bg-white p-2 shadow-sm rounded-b-lg">
       <div className="flex justify-end">
         <Button size="icon" variant="ghost" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size="1rem" /> : <Menu size="1rem" />}
