@@ -12,7 +12,7 @@ function SideBar() {
 
   const router = useRouter();
   return (
-    <div className="fixed w-[240px] bg-white p-4 backdrop-blur-lg flex flex-col rounded-xl top-4 bottom-4 border">
+    <div className="fixed w-[240px] bg-white p-4 backdrop-blur-lg flex flex-col rounded-xl left-4 top-4 bottom-4 border">
       <div className="flex-1">
         <div>
           <h4 className="text-lg font-medium text-gray-900">Sornchai Somsakul</h4>
