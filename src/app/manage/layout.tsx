@@ -1,5 +1,5 @@
 import React from "react";
-import TopBar from "./components/TopBar";
+import Sidebar from "./components/SideBar";
 
 export default function ManageLayout({
   children,
@@ -7,9 +7,9 @@ export default function ManageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <TopBar />
-      <div className="max-w-6xl container p-4">{children}</div>
+    <div className="bg-[#F5F7F8] min-h-screen p-4">
+      <Sidebar />
+      <div className="p-4 ml-[240px]">{children}</div>
     </div>
   );
 }
