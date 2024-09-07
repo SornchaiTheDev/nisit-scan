@@ -1,8 +1,8 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { LogOut } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Skeleton } from "~/components/ui/skeleton";
-import useScanner, { ScanResult } from "~/hooks/useScanner";
+import useScanner from "~/hooks/useScanner";
 import { addParticipantFn } from "~/requests/event";
 import { getEventFn } from "~/requests/event/getEventFn";
 
@@ -34,41 +34,30 @@ function EventPage({ params }: { params: { eventId: string } }) {
 
   const addParticipant = useMutation({
     mutationFn: (barcode: string) => addParticipantFn(params.eventId, barcode),
-    onSuccess: (data) => {
-      if (data.code === "PARTICIPANT_ALREADY_EXISTS") {
-        return toast.error("นิสิตลงทะเบียนไปแล้ว");
-      }
-
+    onSuccess: () => {
       toast.success("ลงทะเบียนนิสิตสำเร็จ");
     },
-    onError: () => {
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.data.code === "PARTICIPANT_ALREADY_EXISTS") {
+          return toast.error("นิสิตลงทะเบียนไปแล้ว");
+        }
+      }
       toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
     },
   });
-
-  const [scanResult, setScanResult] = useState<ScanResult>({
-    barcode: "",
-    timestamp: null,
-  });
-
-  const isScanSuccess = scanResult.barcode.length > 0;
 
   const {
     selectedCamera,
     cameras,
     videoRef,
     onChangeCameraSource,
+    scanResult,
+    clearResult,
     isNoCamera,
   } = useScanner({
     onScan: (res) => addParticipant.mutate(res.barcode),
   });
-
-  const clearResult = () => {
-    setScanResult({
-      barcode: "",
-      timestamp: null,
-    });
-  };
 
   return (
     <div className="p-4 flex flex-col h-screen">
@@ -95,7 +84,7 @@ function EventPage({ params }: { params: { eventId: string } }) {
           )}
         </div>
       </div>
-      <Dialog open={isScanSuccess} onOpenChange={clearResult}>
+      <Dialog open={scanResult.barcode !== null} onOpenChange={clearResult}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>ผลการแสกนบาร์โค้ด</DialogTitle>

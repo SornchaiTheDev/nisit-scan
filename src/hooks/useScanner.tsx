@@ -1,13 +1,18 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type ScanResult = {
+  barcode: string | null;
+  timestamp: Date | null;
+};
+
+type ScanEventPayload = {
   barcode: string;
-  timestamp: number | null;
+  timestamp: Date;
 };
 
 interface Props {
-  onScan?: (result: ScanResult) => void;
+  onScan?: (result: ScanEventPayload) => void;
 }
 
 function useScanner(props?: Props) {
@@ -17,46 +22,63 @@ function useScanner(props?: Props) {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const codeReaderRef = useRef(new BrowserMultiFormatReader());
+  const codeReader = codeReaderRef.current;
+
   useEffect(() => {
-    const codeReader = new BrowserMultiFormatReader();
     codeReader.listVideoInputDevices().then((videoInputDevices) => {
       setCameras(videoInputDevices);
       if (videoInputDevices.length === 0) return;
       setSelectedCamera(videoInputDevices[0].deviceId);
     });
-  }, []);
+  }, [codeReader]);
 
-  const onScan = useMemo(() => props?.onScan, [props]);
+  const onScan = useCallback(
+    (res: ScanEventPayload) => {
+      if (props?.onScan === undefined) return;
+      props.onScan(res);
+    },
+    [props],
+  );
 
-  const decodeFromVideoDevice = useCallback(() => {
-    if (videoRef.current === null) return;
+  const [scanResult, setScanResult] = useState<ScanResult>({
+    barcode: null,
+    timestamp: null,
+  });
 
-    const codeReader = new BrowserMultiFormatReader();
-    codeReader.decodeFromVideoDevice(
-      selectedCamera,
-      videoRef.current,
-      (result) => {
-        if (result === null) return;
-        if (result.getText().length !== 14) return;
-
-        const res = {
-          barcode: result.getText(),
-          timestamp: result.getTimestamp(),
-        };
-
-        if (onScan === undefined) return;
-        onScan(res);
-      },
-    );
-
-    return () => codeReader.reset();
-  }, [onScan, selectedCamera]);
+  const clearResult = () => {
+    setScanResult({
+      barcode: null,
+      timestamp: null,
+    });
+  };
 
   useEffect(() => {
-    if (videoRef.current === null || selectedCamera === null) return;
+    if (selectedCamera === null || scanResult.barcode !== null) return;
 
-    decodeFromVideoDevice();
-  }, [selectedCamera, decodeFromVideoDevice]);
+    const codeReader = new BrowserMultiFormatReader();
+
+    const getBarcode = async () => {
+      if (videoRef.current === null) return;
+
+      const result = await codeReader.decodeOnceFromVideoDevice(
+        selectedCamera,
+        videoRef.current,
+      );
+
+      setScanResult({
+        barcode: result.getText(),
+        timestamp: new Date(result.getTimestamp()),
+      });
+
+      onScan({
+        barcode: result.getText(),
+        timestamp: new Date(result.getTimestamp()),
+      });
+    };
+
+    getBarcode();
+  }, [selectedCamera, onScan, scanResult.barcode, codeReader]);
 
   const onChangeCameraSource = (camera: string) => {
     setSelectedCamera(camera);
@@ -68,6 +90,8 @@ function useScanner(props?: Props) {
     onChangeCameraSource,
     videoRef,
     isNoCamera,
+    scanResult,
+    clearResult,
   };
 }
 
