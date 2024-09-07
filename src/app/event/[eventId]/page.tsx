@@ -1,8 +1,8 @@
 "use client";
-import axios from "axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
@@ -21,54 +21,55 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import useScanner from "~/hooks/useScanner";
-import { api } from "~/lib/axios";
+import { Skeleton } from "~/components/ui/skeleton";
+import useScanner, { ScanResult } from "~/hooks/useScanner";
+import { addParticipantFn } from "~/requests/event";
+import { getEventFn } from "~/requests/event/getEventFn";
 
-function EventPage() {
-  const [saveStatus, setSaveStatus] = useState<"SAVING" | "SAVED" | "IDLE">(
-    "IDLE",
-  );
+function EventPage({ params }: { params: { eventId: string } }) {
+  const event = useQuery({
+    queryKey: ["event", params.eventId],
+    queryFn: () => getEventFn(params.eventId),
+  });
+
+  const addParticipant = useMutation({
+    mutationFn: (barcode: string) => addParticipantFn(params.eventId, barcode),
+    onSuccess: (data) => {
+      if (data.code === "PARTICIPANT_ALREADY_EXISTS") {
+        return toast.error("นิสิตลงทะเบียนไปแล้ว");
+      }
+
+      toast.success("ลงทะเบียนนิสิตสำเร็จ");
+    },
+    onError: () => {
+      toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
+    },
+  });
+
+  const [scanResult, setScanResult] = useState<ScanResult>({
+    barcode: "",
+    timestamp: null,
+  });
+
+  const isScanSuccess = scanResult.barcode.length > 0;
 
   const {
     selectedCamera,
-    scanResult,
     cameras,
     videoRef,
-    isScanSuccess,
     onChangeCameraSource,
     isNoCamera,
-    clearResult,
-  } = useScanner();
+  } = useScanner({
+    onScan: (res) => addParticipant.mutate(res.barcode),
+  });
 
-  useEffect(() => {
-    if (scanResult.barcode === null) return;
+  const clearResult = () => {
+    setScanResult({
+      barcode: "",
+      timestamp: null,
+    });
+  };
 
-    const saveToDB = async () => {
-      setSaveStatus("SAVING");
-
-      try {
-        const existRes = await api.get<{
-          status: "ALREADY_EXIST" | "NOT_FOUND";
-        }>(`/api/barcode/${scanResult.barcode}`);
-
-        if (existRes.data.status === "ALREADY_EXIST") {
-          setSaveStatus("IDLE");
-          return toast.error("นิสิตลงทะเบียนไปแล้ว");
-        }
-
-        const res = await axios.post("/api/save", scanResult);
-
-        if (res.data.status === "SUCCESS") {
-          setSaveStatus("SAVED");
-          toast.success("ลงทะเบียนนิสิตสำเร็จ");
-        }
-      } catch (err) {
-        setSaveStatus("IDLE");
-        toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
-      }
-    };
-    saveToDB();
-  }, [scanResult]);
   return (
     <div className="p-4 flex flex-col h-screen">
       <div>
@@ -85,7 +86,13 @@ function EventPage() {
         </div>
         <div className="mt-4">
           <h5 className="font-normal text-gray-500">ชื่ออีเวนต์</h5>
-          <h4 className="text-lg font-medium text-gray-900">First Event</h4>
+          {event.isLoading ? (
+            <Skeleton className="w-48 h-8" />
+          ) : (
+            <h4 className="text-lg font-medium text-gray-900">
+              {event.data?.name}
+            </h4>
+          )}
         </div>
       </div>
       <Dialog open={isScanSuccess} onOpenChange={clearResult}>
@@ -101,17 +108,17 @@ function EventPage() {
             </h4>
             <DialogFooter>
               <Button
-                disabled={saveStatus === "SAVING"}
+                disabled={addParticipant.isPending}
                 onClick={clearResult}
                 className="w-full mt-4"
               >
-                {saveStatus === "SAVING" ? "กำลังตรวจสอบ" : "ปิด"}
+                {addParticipant.isPending ? "กำลังตรวจสอบ" : "ปิด"}
               </Button>
             </DialogFooter>
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <div className="mt-10 flex-1 flex flex-col justify-center items-start">
+      <div className="mt-10 flex-1 flex flex-col justify-center items-center">
         <video className="rounded-2xl" autoPlay ref={videoRef}></video>
         <div className="mt-4">
           <Select

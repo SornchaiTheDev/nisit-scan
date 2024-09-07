@@ -1,8 +1,8 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-type ScanResult = {
-  barcode: string | null;
+export type ScanResult = {
+  barcode: string;
   timestamp: number | null;
 };
 
@@ -26,22 +26,17 @@ function useScanner(props?: Props) {
     });
   }, []);
 
-  const [scanResult, setScanResult] = useState<ScanResult>({
-    barcode: null,
-    timestamp: null,
-  });
+  const onScan = useMemo(() => props?.onScan, [props]);
 
-  const isScanSuccess = scanResult.barcode !== null;
-
-  useEffect(() => {
-    if (videoRef.current === null || selectedCamera === null) return;
+  const decodeFromVideoDevice = useCallback(() => {
+    if (videoRef.current === null) return;
 
     const codeReader = new BrowserMultiFormatReader();
     codeReader.decodeFromVideoDevice(
       selectedCamera,
       videoRef.current,
       (result) => {
-        if (result === null || scanResult.barcode !== null) return;
+        if (result === null) return;
         if (result.getText().length !== 14) return;
 
         const res = {
@@ -49,36 +44,29 @@ function useScanner(props?: Props) {
           timestamp: result.getTimestamp(),
         };
 
-        setScanResult(res);
-
-        if (props !== undefined && props.onScan !== undefined) {
-          props.onScan(res);
-        }
+        if (onScan === undefined) return;
+        onScan(res);
       },
     );
 
     return () => codeReader.reset();
-  }, [selectedCamera, scanResult, props]);
+  }, [onScan, selectedCamera]);
+
+  useEffect(() => {
+    if (videoRef.current === null || selectedCamera === null) return;
+
+    decodeFromVideoDevice();
+  }, [selectedCamera, decodeFromVideoDevice]);
 
   const onChangeCameraSource = (camera: string) => {
     setSelectedCamera(camera);
   };
 
-  const clearResult = () => {
-    setScanResult({
-      barcode: null,
-      timestamp: null,
-    });
-  };
-
   return {
     cameras,
-    scanResult,
     selectedCamera,
     onChangeCameraSource,
     videoRef,
-    isScanSuccess,
-    clearResult,
     isNoCamera,
   };
 }

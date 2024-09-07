@@ -1,3 +1,3 @@
 export { createEventFn } from "./createEventFn";
 export { removeEventFn } from "./removeEventFn";
-export { scanParticipantFn } from "./scanParticipantFn";
+export { addParticipantFn } from "./addParticipantFn";
