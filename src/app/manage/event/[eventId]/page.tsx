@@ -1,7 +1,7 @@
-import { api } from "~/lib/axios";
 import EventClient from "./client";
 import { notFound } from "next/navigation";
 import { Event } from "~/types";
+import { serverApi } from "~/lib/serverAxios";
 
 async function EventPage({
   params: { eventId },
@@ -11,7 +11,7 @@ async function EventPage({
   let event: Event;
 
   try {
-    const res = await api.get(`/events/${eventId}`);
+    const res = await (await serverApi()).get(`/events/${eventId}`);
     event = res.data;
   } catch (err) {
     notFound();

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState, type ReactNode } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import SideBar from "./components/SideBar";
@@ -6,8 +7,9 @@ import Hamburger from "./components/Hamburger";
 
 interface Props {
   children: ReactNode;
+  name: string;
 }
-function Client({ children }: Props) {
+function Client({ children, name }: Props) {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +28,7 @@ function Client({ children }: Props) {
         </div>
       )}
       <div className="bg-[#F5F7F8] min-h-screen">
-        {isMobile ? <Hamburger /> : <SideBar />}
+        {isMobile ? <Hamburger {...{ name }} /> : <SideBar {...{ name }} />}
 
         <div
           className="p-4"
