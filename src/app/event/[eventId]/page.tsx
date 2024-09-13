@@ -4,13 +4,15 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { AccessToken } from "~/types";
 import EventClient from "./client";
+import { serverApi } from "~/lib/serverAxios";
 
 interface Props {
   params: {
     eventId: string;
   };
 }
-function EventPage({ params }: Props) {
+
+async function EventPage({ params }: Props) {
   const accessToken = cookies().get("accessToken");
   const redirectUrl = `/auth/sign-in?redirect_to=/event/${params.eventId}`;
 
@@ -22,6 +24,13 @@ function EventPage({ params }: Props) {
   if (role !== "staff") {
     return redirect(redirectUrl);
   }
+
+  try {
+    await (await serverApi()).get(`/events/${params.eventId}`);
+  } catch (e) {
+    return redirect(redirectUrl);
+  }
+
   return <EventClient {...{ name, role }} id={params.eventId} />;
 }
 

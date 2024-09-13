@@ -5,8 +5,5 @@ export const removeAdminsFn = async (ids: string[]) => {
     data: {
       ids,
     },
-    headers: {
-      Authorization: "Basic YWRtaW46YWRtaW4=",
-    },
   });
 };

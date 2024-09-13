@@ -9,9 +9,5 @@ export const createEventFn = async (event: EventSchema) => {
     date: dayjs(event.date).format("DD/MM/YYYY"),
   };
 
-  return api.post("/events/create", payload, {
-    headers: {
-      "X-Admin-Id": "590b3933-27f3-4f71-949a-6f86f9257523",
-    },
-  });
+  return api.post("/events", payload);
 };

@@ -6,10 +6,13 @@ interface ScanResponse {
   participant: Participant;
 }
 export const addParticipantFn = async (eventId: string, barcode: string) => {
-  const { data } = await api.post<ScanResponse>(`/participants/add`, {
-    eventId,
-    barcode,
-  });
+  const { data } = await api.post<ScanResponse>(
+    `/events/${eventId}/participants`,
+    {
+      eventId,
+      barcode,
+    },
+  );
 
   return data;
 };

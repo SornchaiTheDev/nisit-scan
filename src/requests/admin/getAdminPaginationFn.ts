@@ -13,11 +13,6 @@ export const getAdminPaginationFn = async (
 ) => {
   const event = await api.get<Response>(
     `/admins?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${search}`,
-    {
-      headers: {
-        Authorization: "Basic YWRtaW46YWRtaW4=",
-      },
-    },
   );
   return event.data;
 };

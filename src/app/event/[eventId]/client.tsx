@@ -25,8 +25,7 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import useScanner from "~/hooks/useScanner";
 import { api } from "~/lib/axios";
-import { addParticipantFn } from "~/requests/event";
-import { getEventFn } from "~/requests/event/getEventFn";
+import { addParticipantFn, getEventFn } from "~/requests/event";
 
 interface Props {
   name: string;

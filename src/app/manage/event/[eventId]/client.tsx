@@ -1,13 +1,11 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { removeEventFn } from "~/requests/event";
 import "dayjs/locale/th";
 import {
   ArrowLeft,
   Download,
   Hash,
-  Link,
   MapPin,
   Pencil,
   Save,
@@ -19,7 +17,13 @@ import { DataTable } from "~/components/ui/data-table";
 import { participantsColumns } from "./columns/participants";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { getParticipantsFn, removeParticipantFn } from "~/requests/event";
+import {
+  getParticipantsFn,
+  removeParticipantFn,
+  removeEventFn,
+  editEventFn,
+  getEventFn,
+} from "~/requests/event";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -34,11 +38,9 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
-import EventDialog from "../../events/components/EventDialog";
-import { editEventFn } from "~/requests/event/editEventFn";
+import EventDialog from "../../components/EventDialog";
 import { EventSchema } from "~/schemas/eventSchema";
 import { queryClient } from "~/wrapper/QueryWrapper";
-import { getEventFn } from "~/requests/event/getEventFn";
 import { Skeleton } from "~/components/ui/skeleton";
 import _ from "lodash";
 import { Participant } from "~/types/Event";
