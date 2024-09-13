@@ -2,7 +2,6 @@ import { Calendar, LogOut, Menu, UserRound, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { api } from "~/lib/axios";
 import { cn } from "~/lib/utils";
 
 interface Props {
@@ -13,16 +12,13 @@ function Hamburger({ name }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const pathname = usePathname();
-  const isEvent = pathname === "/manage/events";
+  const isEvent = pathname === "/manage";
   const isStaff = pathname === "/manage/admins";
 
   const router = useRouter();
 
-  const handleLogout = async () => {
-    const res = await api.post("/auth/logout");
-    if (res.status === 200) {
-      router.push("/auth/sign-in");
-    }
+  const handleLogout = () => {
+    window.location.href = "/auth/sign-out?redirect_to=/manage";
   };
 
   return (
@@ -42,7 +38,7 @@ function Hamburger({ name }: Props) {
             <div className="space-y-2 mt-4">
               <h6 className="text-sm text-gray-500">เมนู</h6>
               <button
-                onClick={() => router.push("/manage/events")}
+                onClick={() => router.push("/manage")}
                 className={cn(
                   "flex gap-2 items-center p-2 rounded-lg w-full hover:bg-gray-100",
                   isEvent && "bg-gray-100",
