@@ -13,7 +13,7 @@ export const getParticipantsFn = async (
   pageSize: number,
 ) => {
   const event = await api.get<Response>(
-    `/events/${eventId}/participants?pageIndex=${pageIndex}&pageSize=${pageSize}&barcode=${barcode}`,
+    `/events/${eventId}/participants?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${barcode}`,
   );
   return event.data;
 };
