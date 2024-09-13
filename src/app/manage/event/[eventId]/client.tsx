@@ -19,10 +19,7 @@ import { DataTable } from "~/components/ui/data-table";
 import { participantsColumns } from "./columns/participants";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import {
-  getParticipantsFn,
-  removeParticipantFn,
-} from "~/requests/participants";
+import { getParticipantsFn, removeParticipantFn } from "~/requests/event";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -127,7 +124,7 @@ function EventClient({ id }: Props) {
   }, [search, debouncedRefetch]);
 
   const deleteParticipant = useMutation({
-    mutationFn: (ids: string[]) => removeParticipantFn(id, ids),
+    mutationFn: (barcodes: string[]) => removeParticipantFn(id, barcodes),
     onSuccess: () => {
       toast.success("ลบผู้เข้าร่วมสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["participants", pagination] });
@@ -139,9 +136,9 @@ function EventClient({ id }: Props) {
       .getFilteredSelectedRowModel()
       .rows.map((row) => row.original);
 
-    const ids = rows.map((row) => row.id);
+    const barcodes = rows.map((row) => row.barcode);
 
-    deleteParticipant.mutate(ids);
+    deleteParticipant.mutate(barcodes);
     table.resetRowSelection();
   };
 
