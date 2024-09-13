@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { PaginationState, Table } from "@tanstack/react-table";
 import { Search, Trash, UserRoundPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
 import { Input } from "~/components/ui/input";
@@ -16,7 +16,8 @@ import { Admin } from "~/types";
 import AdminDialog from "./_components/AdminDialog";
 import { toast } from "sonner";
 import { queryClient } from "~/wrapper/QueryWrapper";
-import { AxiosError, AxiosHeaders } from "axios";
+import { AxiosError } from "axios";
+import _ from "lodash";
 
 function ManageStaffPage() {
   const [search, setSearch] = useState("");
@@ -42,11 +43,24 @@ function ManageStaffPage() {
     table.resetRowSelection();
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["admins", pagination],
     queryFn: () =>
       getAdminPaginationFn(search, pagination.pageIndex, pagination.pageSize),
   });
+
+  const debouncedRefetch = useMemo(
+    () =>
+      _.debounce(() => {
+        refetch();
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+      }, 500),
+    [refetch],
+  );
+
+  useEffect(() => {
+    debouncedRefetch();
+  }, [search, debouncedRefetch]);
 
   const [isOpen, setIsOpen] = useState(false);
 
