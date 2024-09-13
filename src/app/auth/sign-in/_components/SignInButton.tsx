@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Button } from "~/components/ui/button";
 
@@ -19,10 +20,12 @@ function SignInButton() {
       variant="outline"
       className="w-[400px] h-12 text-gray-900"
     >
-      <img
+      <Image
         src="/icons/google-icon.svg"
         alt="Google Icon"
-        className="w-6 h-6 mr-2"
+        width={24}
+        height={24}
+        className="mr-2"
       />
       เข้าสู่ระบบด้วย Google
     </Button>
