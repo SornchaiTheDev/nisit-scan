@@ -2,31 +2,21 @@
 
 import { CirclePlus, Search } from "lucide-react";
 import { Input } from "~/components/ui/input";
-import EventCard from "./components/EventCard";
-import { api } from "~/lib/axios";
-import { Event } from "~/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Skeleton } from "~/components/ui/skeleton";
 import { Button } from "~/components/ui/button";
 import EventDialog from "./components/EventDialog";
-import { createEventFn } from "~/requests/event";
+import { createEventFn, getEventPaginationFn } from "~/requests/event";
 import { queryClient } from "~/wrapper/QueryWrapper";
 import { EventSchema } from "~/schemas/eventSchema";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { DataTable } from "~/components/ui/data-table";
+import { PaginationState } from "@tanstack/react-table";
+import _ from "lodash";
+import { eventsColumns } from "./columns/eventColumns";
 
 function ManagePage() {
-  const { data: events, isLoading } = useQuery({
-    queryKey: ["events"],
-    queryFn: async () => {
-      const res = await api.get<Event[]>("/events");
-      return res.data;
-    },
-  });
-
-  const eventCount = events?.length ?? 0;
-
   const createEvent = useMutation({
     mutationFn: createEventFn,
     onSuccess: () => {
@@ -53,46 +43,87 @@ function ManagePage() {
     }
   };
 
-  return (
-    <div>
-      <h2 className="text-xl font-medium">จัดการอีเวนต์</h2>
+  const [search, setSearch] = useState("");
 
-      <EventDialog
-        triggerButton={
-          <Button className="w-full gap-4 my-4">
-            <CirclePlus size="1.25rem" /> สร้างอีเวนต์ใหม่
-          </Button>
-        }
-        actionBtnContent={
-          <>
-            <CirclePlus size="1.25rem" />
-            สร้าง
-          </>
-        }
-        isPending={createEvent.isPending}
-        {...{ handleOnSubmit, isOpen, setIsOpen }}
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageSize: 10,
+    pageIndex: 0,
+  });
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["admins", pagination],
+    queryFn: () =>
+      getEventPaginationFn(search, pagination.pageIndex, pagination.pageSize),
+  });
+
+  const debouncedRefetch = useMemo(
+    () =>
+      _.debounce(() => {
+        refetch();
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+      }, 500),
+    [refetch],
+  );
+
+  useEffect(() => {
+    debouncedRefetch();
+  }, [search, debouncedRefetch]);
+
+  return (
+    <div className="flex flex-col ">
+      <h2 className="text-xl font-medium mb-4">จัดการอีเวนต์</h2>
+      <DataTable
+        className="flex-1"
+        topSection={(table) => (
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4 items-center">
+              <div className="relative">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="ค้นหาอีเวนต์"
+                  className="max-w-[300px] pl-8"
+                />
+                <Search
+                  className="absolute top-1/2 -translate-y-1/2 left-2 text-gray-600"
+                  size="1rem"
+                />
+              </div>
+            </div>
+            <EventDialog
+              triggerButton={
+                <Button className="gap-2">
+                  <CirclePlus size="1.25rem" /> สร้างอีเวนต์ใหม่
+                </Button>
+              }
+              actionBtnContent={
+                <>
+                  <CirclePlus size="1.25rem" />
+                  สร้าง
+                </>
+              }
+              isPending={createEvent.isPending}
+              {...{ handleOnSubmit, isOpen, setIsOpen }}
+            />
+          </div>
+        )}
+        isLoading={isLoading}
+        totalRows={data?.totalRows ?? 0}
+        columns={eventsColumns}
+        data={data?.events ?? []}
+        {...{ pagination, setPagination }}
       />
-      <div className="relative">
-        <Search
-          className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"
-          size="1.25rem"
-        />
-        <Input className="pl-10" placeholder="ค้นหาอีเวนต์" />
-      </div>
-      <h6 className="text-sm font-light my-4">
-        อีเวนต์ทั้งหมด <span className="font-medium">{eventCount}</span> รายการ
-      </h6>
-      {isLoading ? (
-        <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="col-span-12 md:col-span-4 h-32" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4">
-          {events?.map((event) => <EventCard key={event.id} {...event} />)}
-        </div>
-      )}
+      {/* {isLoading ? ( */}
+      {/*   <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4"> */}
+      {/*     {Array.from({ length: 4 }).map((_, i) => ( */}
+      {/*       <Skeleton key={i} className="col-span-12 md:col-span-4 h-32" /> */}
+      {/*     ))} */}
+      {/*   </div> */}
+      {/* ) : ( */}
+      {/*   <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4"> */}
+      {/*     {events?.map((event) => <EventCard key={event.id} {...event} />)} */}
+      {/*   </div> */}
+      {/* )} */}
     </div>
   );
 }

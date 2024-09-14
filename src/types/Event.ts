@@ -17,7 +17,7 @@ export interface Event {
   host: string;
   owner: string;
   staffs: Staff[];
-  participants: Participant[];
+  participants_count: Participant[];
 }
 
 export interface EventRequest {
