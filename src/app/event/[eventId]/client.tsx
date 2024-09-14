@@ -71,7 +71,7 @@ function EventClient({ name, id, role }: Props) {
   const handleLogout = async () => {
     const res = await api.post("/auth/logout");
     if (res.status === 200) {
-      router.push("/auth/sign-in");
+      router.push(`/auth/sign-in?redirect_to=/event/${id}`);
     }
   };
 
