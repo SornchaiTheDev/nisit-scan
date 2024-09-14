@@ -2,6 +2,7 @@ import {
   ColumnDef,
   OnChangeFn,
   RowData,
+  TableMeta,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -30,7 +31,7 @@ import {
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
-    deleteRows: (row: TData) => void;
+    selectRow: (row: TData) => void;
   }
 }
 
@@ -46,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   totalRows: number;
   isLoading?: boolean;
   topSection?: (table: Table<TData>) => ReactNode;
+  meta?: TableMeta<TData>;
 }
 
 export function DataTable<TData, TValue>({
@@ -56,12 +58,14 @@ export function DataTable<TData, TValue>({
   totalRows,
   isLoading,
   topSection,
+  meta,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
+    meta,
     state: {
       pagination,
     },

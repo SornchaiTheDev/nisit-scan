@@ -1,4 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { Pencil } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Admin } from "~/types";
 
@@ -32,5 +34,19 @@ export const adminsColumns: ColumnDef<Admin>[] = [
   {
     accessorKey: "fullName",
     header: "ชื่อจริง",
+  },
+  {
+    id: "actions",
+    header: "แก้ไข",
+    cell: ({ table, row }) => (
+      <Button
+        onClick={() => table.options.meta?.selectRow(row.original)}
+        size="icon"
+        variant="ghost"
+        className="w-8 h-8"
+      >
+        <Pencil size="1rem" />
+      </Button>
+    ),
   },
 ];

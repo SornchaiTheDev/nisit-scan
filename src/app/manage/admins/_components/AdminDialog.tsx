@@ -15,15 +15,17 @@ import { Input } from "~/components/ui/input";
 import { AdminSchema, adminSchema } from "~/schemas/adminSchema";
 
 interface Props {
+  title: string;
   initialData?: AdminSchema;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   handleOnSubmit: (formData: AdminSchema) => void;
   isPending: boolean;
-  triggerButton: React.ReactNode;
+  triggerButton?: React.ReactNode;
   actionBtnContent: React.ReactNode;
 }
 function AdminDialog({
+  title,
   initialData,
   isOpen,
   setIsOpen,
@@ -45,10 +47,12 @@ function AdminDialog({
   const disabledSubmitButton = !form.formState.isValid || isPending;
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
+      {!!triggerButton && (
+        <DialogTrigger asChild>{triggerButton}</DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[425px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>สร้างอีเวนต์ใหม่</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form {...{ onSubmit }} className="space-y-2">

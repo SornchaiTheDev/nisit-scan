@@ -8,6 +8,7 @@ import { DataTable } from "~/components/ui/data-table";
 import { Input } from "~/components/ui/input";
 import {
   addAdminFn,
+  editAdminFn,
   getAdminPaginationFn,
   removeAdminsFn,
 } from "~/requests/admin";
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 import { queryClient } from "~/wrapper/QueryWrapper";
 import { AxiosError } from "axios";
 import _ from "lodash";
+import { AdminSchema } from "~/schemas/adminSchema";
 
 function ManageStaffPage() {
   const [search, setSearch] = useState("");
@@ -80,67 +82,99 @@ function ManageStaffPage() {
     },
   });
 
-  return (
-    <div>
-      <h3 className="text-2xl">จัดการแอดมิน</h3>
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const selectRow = (row: Admin) => {
+    setSelectedAdmin(row);
+  };
 
-      <div className="flex justify-end mb-4 mt-2">
-        <AdminDialog
-          triggerButton={
-            <Button className="flex gap-2" size="sm">
-              <UserRoundPlus size="1rem" />
-              เพิ่มแอดมิน
-            </Button>
-          }
-          actionBtnContent="เพิ่มแอดมิน"
-          handleOnSubmit={(admin) => addAdmin.mutate(admin)}
-          {...{ isOpen, setIsOpen }}
-          isPending={addAdmin.isPending}
+  const editAdmin = useMutation({
+    mutationFn: (admin: AdminSchema) => editAdminFn(selectedAdmin?.id, admin),
+    onSuccess: () => {
+      setSelectedAdmin(null);
+      toast.success("แก้ไขแอดมินสำเร็จ");
+      queryClient.invalidateQueries({ queryKey: ["admins", pagination] });
+    },
+  });
+
+  return (
+    <>
+      <AdminDialog
+        key={selectedAdmin?.id}
+        title="แก้ไขแอดมิน"
+        actionBtnContent="แก้ไข"
+        initialData={!!selectedAdmin ? selectedAdmin : undefined}
+        handleOnSubmit={(admin) => editAdmin.mutate(admin)}
+        {...{
+          isOpen: !!selectedAdmin,
+          setIsOpen: () => setSelectedAdmin(null),
+        }}
+        isPending={editAdmin.isPending}
+      />
+      <div>
+        <h3 className="text-2xl">จัดการแอดมิน</h3>
+
+        <div className="flex justify-end mb-4 mt-2">
+          <AdminDialog
+            title="เพิ่มแอดมินใหม่"
+            triggerButton={
+              <Button className="flex gap-2" size="sm">
+                <UserRoundPlus size="1rem" />
+                เพิ่มแอดมิน
+              </Button>
+            }
+            actionBtnContent="เพิ่มแอดมิน"
+            handleOnSubmit={(admin) => addAdmin.mutate(admin)}
+            {...{ isOpen, setIsOpen }}
+            isPending={addAdmin.isPending}
+          />
+        </div>
+
+        <DataTable
+          meta={{ selectRow }}
+          topSection={(table) => (
+            <div className="flex justify-between items-center">
+              <div className="flex gap-4 items-center">
+                <div className="relative">
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="ค้นหาแอดมิน"
+                    className="max-w-[300px] pl-8"
+                  />
+                  <Search
+                    className="absolute top-1/2 -translate-y-1/2 left-2"
+                    size="1rem"
+                  />
+                </div>
+                <h6 className="text-sm text-gray-700">
+                  เลือกทั้งหมด {table.getFilteredSelectedRowModel().rows.length}{" "}
+                  แถว
+                </h6>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Button
+                  disabled={
+                    table.getFilteredSelectedRowModel().rows.length === 0
+                  }
+                  onClick={() => handleOnDeleteRows(table)}
+                  size="icon"
+                  className="w-8 h-8"
+                  variant="outline"
+                >
+                  <Trash size="1rem" />
+                </Button>
+              </div>
+            </div>
+          )}
+          isLoading={isLoading}
+          totalRows={data?.totalRows ?? 0}
+          columns={adminsColumns}
+          data={data?.admins ?? []}
+          {...{ pagination, setPagination }}
         />
       </div>
-
-      <DataTable
-        topSection={(table) => (
-          <div className="flex justify-between items-center">
-            <div className="flex gap-4 items-center">
-              <div className="relative">
-                <Input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="ค้นหาแอดมิน"
-                  className="max-w-[300px] pl-8"
-                />
-                <Search
-                  className="absolute top-1/2 -translate-y-1/2 left-2"
-                  size="1rem"
-                />
-              </div>
-              <h6 className="text-sm text-gray-700">
-                เลือกทั้งหมด {table.getFilteredSelectedRowModel().rows.length}{" "}
-                แถว
-              </h6>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Button
-                disabled={table.getFilteredSelectedRowModel().rows.length === 0}
-                onClick={() => handleOnDeleteRows(table)}
-                size="icon"
-                className="w-8 h-8"
-                variant="outline"
-              >
-                <Trash size="1rem" />
-              </Button>
-            </div>
-          </div>
-        )}
-        isLoading={isLoading}
-        totalRows={data?.totalRows ?? 0}
-        columns={adminsColumns}
-        data={data?.admins ?? []}
-        {...{ pagination, setPagination }}
-      />
-    </div>
+    </>
   );
 }
 
