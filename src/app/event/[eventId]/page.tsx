@@ -5,6 +5,7 @@ import React from "react";
 import { AccessToken } from "~/types";
 import EventClient from "./client";
 import { serverApi } from "~/lib/serverAxios";
+import SessionWrapper from "~/wrapper/SessionWrapper";
 
 interface Props {
   params: {
@@ -21,9 +22,6 @@ async function EventPage({ params }: Props) {
   }
 
   const { role, name } = jwtDecode<AccessToken>(accessToken.value);
-  if (role !== "staff") {
-    return redirect(redirectUrl);
-  }
 
   try {
     await (await serverApi()).get(`/events/${params.eventId}`);
@@ -31,7 +29,11 @@ async function EventPage({ params }: Props) {
     return redirect(redirectUrl);
   }
 
-  return <EventClient {...{ name, role }} id={params.eventId} />;
+  return (
+    <SessionWrapper>
+      <EventClient {...{ name, role }} id={params.eventId} />
+    </SessionWrapper>
+  );
 }
 
 export default EventPage;

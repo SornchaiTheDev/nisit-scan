@@ -90,9 +90,7 @@ function ManagePage() {
         </div>
       ) : (
         <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4">
-          {events!.map((event) => (
-            <EventCard key={event.id} {...event} />
-          ))}
+          {events?.map((event) => <EventCard key={event.id} {...event} />)}
         </div>
       )}
     </div>

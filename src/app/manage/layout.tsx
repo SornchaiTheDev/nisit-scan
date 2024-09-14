@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { redirect } from "next/navigation";
 import { AccessToken } from "~/types";
 import dayjs from "dayjs";
+import SessionWrapper from "~/wrapper/SessionWrapper";
 
 const Client = dynamic(() => import("./client"), { ssr: false });
 
@@ -23,5 +24,9 @@ export default async function ManageLayout({
     return redirect("/auth/sign-out?redirect_to=/manage");
   }
 
-  return <Client {...{ name }}>{children}</Client>;
+  return (
+    <SessionWrapper>
+      <Client {...{ name }}>{children}</Client>
+    </SessionWrapper>
+  );
 }
