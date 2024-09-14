@@ -96,7 +96,7 @@ function EventClient({ id }: Props) {
   const deleteEvent = useMutation({
     mutationFn: removeEventFn,
     onSuccess: () => {
-      router.push("/manage/events");
+      router.push("/manage");
       toast.success("ลบอีเวนต์สำเร็จ");
     },
   });
