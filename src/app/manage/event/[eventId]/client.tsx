@@ -45,7 +45,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import _ from "lodash";
 import { Participant } from "~/types/Event";
 import { Table } from "@tanstack/react-table";
-import { TagsInput } from "react-tag-input-component";
+import { Tag, TagInput } from "emblor";
 import { setStaffsFn } from "~/requests/staff";
 import CopyLinkButton from "./_components/CopyLinkButton";
 
@@ -165,20 +165,28 @@ function EventClient({ id }: Props) {
     a.click();
   };
 
-  const [staffsInput, setStaffsInput] = useState<string[]>([]);
+  const [staffsInput, setStaffsInput] = useState<Tag[]>([]);
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (isEventLoading) return;
     const emails = event?.staffs.map((staff) => staff.email) ?? [];
-    setStaffsInput(emails);
+    setStaffsInput(emails.map((email) => ({ id: email, text: email }) as Tag));
   }, [event?.staffs, isEventLoading]);
 
   const setStaffs = useMutation({
     mutationFn: (staffs: string[]) => setStaffsFn(id, staffs),
     onSuccess: () => {
-      toast.success("เพิ่มเจ้าหน้าที่สำเร็จ");
+      toast.success("แก้ไขเจ้าหน้าที่สำเร็จ");
+      queryClient.invalidateQueries({ queryKey: ["event", id] });
     },
   });
+
+  const staffsEvent = staffsInput.map((tag) => tag.text);
+
+  const isStaffsChanged =
+    JSON.stringify(staffsEvent) !==
+    JSON.stringify(event?.staffs.map((staff) => staff.email));
 
   return (
     <>
@@ -311,18 +319,26 @@ function EventClient({ id }: Props) {
           {isEventLoading ? (
             <Skeleton className="w-full h-12" />
           ) : (
-            <TagsInput
-              separators={[",", "\n"]}
-              value={staffsInput}
-              onChange={setStaffsInput}
+            <TagInput
+              tags={staffsInput}
+              setTags={setStaffsInput}
+              styleClasses={{
+                input: "shadow-none",
+                tag: {
+                  body: "pl-2 bg-gray-100 rounded-lg",
+                },
+              }}
               placeHolder="กรอกอีเมลเจ้าหน้าที่แล้ว Enter"
+              activeTagIndex={activeTagIndex}
+              setActiveTagIndex={setActiveTagIndex}
             />
           )}
         </div>
         <Button
           className="flex gap-2 items-center mt-2"
           size="sm"
-          onClick={() => setStaffs.mutate(staffsInput)}
+          disabled={!isStaffsChanged}
+          onClick={() => setStaffs.mutate(staffsEvent)}
         >
           <Save size="1rem" />
           บันทึก
