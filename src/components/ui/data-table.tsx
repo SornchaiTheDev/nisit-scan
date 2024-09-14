@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
+import { cn } from "~/lib/utils";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -48,6 +49,7 @@ interface DataTableProps<TData, TValue> {
   isLoading?: boolean;
   topSection?: (table: Table<TData>) => ReactNode;
   meta?: TableMeta<TData>;
+  className?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -59,6 +61,7 @@ export function DataTable<TData, TValue>({
   isLoading,
   topSection,
   meta,
+  className,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -76,7 +79,12 @@ export function DataTable<TData, TValue>({
   return (
     <>
       {typeof topSection === "function" && topSection(table)}
-      <div className="rounded-md border mt-4 bg-white">
+      <div
+        className={cn(
+          "rounded-md border mt-4 bg-white flex flex-col justify-between min-h-[500px]",
+          className,
+        )}
+      >
         <TableUI>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

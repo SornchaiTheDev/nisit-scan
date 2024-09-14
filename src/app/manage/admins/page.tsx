@@ -110,7 +110,7 @@ function ManageStaffPage() {
         }}
         isPending={editAdmin.isPending}
       />
-      <div>
+      <div className="flex-1 flex flex-col">
         <h3 className="text-2xl">จัดการแอดมิน</h3>
 
         <div className="flex justify-end mb-4 mt-2">
@@ -130,6 +130,7 @@ function ManageStaffPage() {
         </div>
 
         <DataTable
+          className="flex-1"
           meta={{ selectRow }}
           topSection={(table) => (
             <div className="flex justify-between items-center">

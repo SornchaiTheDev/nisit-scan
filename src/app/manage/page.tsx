@@ -70,7 +70,7 @@ function ManagePage() {
   }, [search, debouncedRefetch]);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col flex-1">
       <h2 className="text-xl font-medium mb-4">จัดการอีเวนต์</h2>
       <DataTable
         className="flex-1"
@@ -92,8 +92,8 @@ function ManagePage() {
             </div>
             <EventDialog
               triggerButton={
-                <Button className="gap-2">
-                  <CirclePlus size="1.25rem" /> สร้างอีเวนต์ใหม่
+                <Button className="gap-2" size="sm">
+                  <CirclePlus size="1rem" /> สร้างอีเวนต์ใหม่
                 </Button>
               }
               actionBtnContent={

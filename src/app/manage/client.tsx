@@ -27,14 +27,13 @@ function Client({ children, name }: Props) {
           <LoaderCircle className="animate-spin" size="1.5rem" />
         </div>
       )}
-      <div className="bg-[#F5F7F8] min-h-screen">
+      <div className="bg-[#F5F7F8]">
         {isMobile ? <Hamburger {...{ name }} /> : <SideBar {...{ name }} />}
-
         <div
-          className="p-4"
+          className="p-4 min-h-screen flex flex-col"
           style={{
             marginLeft: isMobile ? 0 : 260,
-            paddingTop: isMobile ? 80 : 40,
+            paddingTop: isMobile ? 80 : 20,
           }}
         >
           {children}

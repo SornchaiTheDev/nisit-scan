@@ -1,7 +1,11 @@
-import React from "react";
+import { redirect } from "next/navigation";
+import { isAdmin } from "~/lib/isAdmin";
 
 function ManageAdminLayout({ children }: { children: React.ReactNode }) {
-  return children
+  if (!isAdmin()) {
+    redirect("/auth/sign-out?redirect_to=/manage/admins");
+  }
+  return children;
 }
 
 export default ManageAdminLayout;

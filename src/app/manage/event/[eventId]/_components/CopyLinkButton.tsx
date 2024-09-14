@@ -19,7 +19,7 @@ function CopyLinkButton({ link }: Props) {
     setIsCopied(true);
   };
   return (
-    <Button variant="outline" className="gap-2" onClick={handleCopy}>
+    <Button variant="outline" size="sm" className="gap-2" onClick={handleCopy}>
       {isCopied ? (
         <Check size="1rem" className="text-green-500" />
       ) : (
