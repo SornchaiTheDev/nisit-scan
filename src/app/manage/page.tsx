@@ -51,7 +51,7 @@ function ManagePage() {
   });
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["admins", pagination],
+    queryKey: ["events", pagination],
     queryFn: () =>
       getEventPaginationFn(search, pagination.pageIndex, pagination.pageSize),
   });
@@ -74,7 +74,7 @@ function ManagePage() {
       <h2 className="text-xl font-medium mb-4">จัดการอีเวนต์</h2>
       <DataTable
         className="flex-1"
-        topSection={(table) => (
+        topSection={() => (
           <div className="flex justify-between items-center">
             <div className="flex gap-4 items-center">
               <div className="relative">
@@ -113,17 +113,6 @@ function ManagePage() {
         data={data?.events ?? []}
         {...{ pagination, setPagination }}
       />
-      {/* {isLoading ? ( */}
-      {/*   <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4"> */}
-      {/*     {Array.from({ length: 4 }).map((_, i) => ( */}
-      {/*       <Skeleton key={i} className="col-span-12 md:col-span-4 h-32" /> */}
-      {/*     ))} */}
-      {/*   </div> */}
-      {/* ) : ( */}
-      {/*   <div className="grid grid-cols-12 lg:flex-row flex-wrap mt-2 mb-4 gap-4"> */}
-      {/*     {events?.map((event) => <EventCard key={event.id} {...event} />)} */}
-      {/*   </div> */}
-      {/* )} */}
     </div>
   );
 }
