@@ -75,14 +75,14 @@ function ManagePage() {
       <DataTable
         className="flex-1"
         topSection={() => (
-          <div className="flex justify-between items-center">
-            <div className="flex gap-4 items-center">
-              <div className="relative">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
+            <div className="flex gap-4 items-center w-full md:w-fit">
+              <div className="relative w-full">
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="ค้นหาอีเวนต์"
-                  className="max-w-[300px] pl-8"
+                  className="w-full md:max-w-[300px] pl-8"
                 />
                 <Search
                   className="absolute top-1/2 -translate-y-1/2 left-2 text-gray-600"
@@ -92,7 +92,7 @@ function ManagePage() {
             </div>
             <EventDialog
               triggerButton={
-                <Button className="gap-2" size="sm">
+                <Button className="gap-2 w-full md:w-fit" size="sm">
                   <CirclePlus size="1rem" /> สร้างอีเวนต์ใหม่
                 </Button>
               }
