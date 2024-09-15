@@ -14,7 +14,7 @@ export default async function ManageLayout({
   children: React.ReactNode;
 }) {
   if (!isAdmin()) {
-    redirect("/auth/sign-out?redirect_to=/manage");
+    redirect("/auth/sign-out");
   }
 
   const accessToken = cookies().get("accessToken");

@@ -11,13 +11,17 @@ interface Props {
 
 function SideBar({ name }: Props) {
   const pathname = usePathname();
-  const isEvent = pathname === "/manage";
-  const isStaff = pathname === "/manage/admins";
+
+  const eventPath = "/";
+  const adminPath = "/admins";
+
+  const isEvent = pathname === eventPath;
+  const isStaff = pathname === adminPath;
 
   const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = "/auth/sign-out?redirect_to=/manage";
+    window.location.href = "/auth/sign-out";
   };
 
   return (
@@ -30,7 +34,7 @@ function SideBar({ name }: Props) {
         <div className="space-y-2 mt-4">
           <h6 className="text-sm text-gray-500">เมนู</h6>
           <button
-            onClick={() => router.push("/manage")}
+            onClick={() => router.push(eventPath)}
             className={cn(
               "flex gap-2 items-center p-2 rounded-lg w-full hover:bg-gray-100",
               isEvent && "bg-gray-100",
@@ -40,7 +44,7 @@ function SideBar({ name }: Props) {
             จัดการอีเวนต์
           </button>
           <button
-            onClick={() => router.push("/manage/admins")}
+            onClick={() => router.push(adminPath)}
             className={cn(
               "flex gap-2 items-center p-2 rounded-lg w-full hover:bg-gray-100",
               isStaff && "bg-gray-100",

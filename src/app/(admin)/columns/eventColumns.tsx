@@ -8,7 +8,7 @@ export const eventsColumns: ColumnDef<Event>[] = [
     accessorKey: "name",
     header: "ชื่อ",
     cell: ({ row }) => (
-      <Link href={`/manage/event/${row.original.id}`}>{row.original.name}</Link>
+      <Link href={`/event/${row.original.id}`}>{row.original.name}</Link>
     ),
   },
   {
