@@ -15,10 +15,9 @@ interface Props {
 
 async function EventPage({ params }: Props) {
   const accessToken = cookies().get("accessToken");
-  const redirectUrl = `/auth/sign-in?redirect_to=/event/${params.eventId}`;
 
   if (!accessToken) {
-    return redirect(redirectUrl);
+    return redirect(`/auth/sign-in?redirect_to=/scan/${params.eventId}`);
   }
 
   const { role, name } = jwtDecode<AccessToken>(accessToken.value);
@@ -26,7 +25,7 @@ async function EventPage({ params }: Props) {
   try {
     await (await serverApi()).get(`/events/${params.eventId}`);
   } catch (e) {
-    return redirect(redirectUrl);
+    return redirect("/auth/sign-in?error=not-allowed");
   }
 
   return (
