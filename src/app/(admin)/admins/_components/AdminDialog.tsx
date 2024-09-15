@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import {
@@ -23,6 +23,7 @@ interface Props {
   isPending: boolean;
   triggerButton?: React.ReactNode;
   actionBtnContent: React.ReactNode;
+  isSuccess: boolean;
 }
 function AdminDialog({
   title,
@@ -33,6 +34,7 @@ function AdminDialog({
   isPending,
   triggerButton,
   actionBtnContent,
+  isSuccess,
 }: Props) {
   const form = useForm<AdminSchema>({
     resolver: zodResolver(adminSchema),
@@ -41,6 +43,12 @@ function AdminDialog({
       fullName: "",
     },
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+    }
+  }, [form, isSuccess]);
 
   const onSubmit = form.handleSubmit(handleOnSubmit);
 

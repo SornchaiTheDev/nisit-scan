@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type EventSchema, eventSchema } from "~/schemas/eventSchema";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 
 interface Props {
@@ -25,6 +25,7 @@ interface Props {
   setIsOpen: (value: boolean) => void;
   initialData?: EventSchema;
   actionBtnContent: ReactNode;
+  isSucces: boolean;
 }
 
 export default function EventDialog({
@@ -35,6 +36,7 @@ export default function EventDialog({
   setIsOpen,
   initialData,
   actionBtnContent,
+  isSucces,
 }: Props) {
   const form = useForm<EventSchema>({
     resolver: zodResolver(eventSchema),
@@ -48,6 +50,12 @@ export default function EventDialog({
   const onSubmit = form.handleSubmit(handleOnSubmit);
 
   const disabledSubmitButton = !form.formState.isValid || isPending;
+
+  useEffect(() => {
+    if (isSucces) {
+      form.reset();
+    }
+  }, [isSucces, form]);
 
   return (
     <>

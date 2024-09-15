@@ -18,7 +18,7 @@ import AdminDialog from "./_components/AdminDialog";
 import { toast } from "sonner";
 import { queryClient } from "~/wrapper/QueryWrapper";
 import { AxiosError } from "axios";
-import _ from "lodash";
+import _, { add } from "lodash";
 import { AdminSchema } from "~/schemas/adminSchema";
 
 function ManageStaffPage() {
@@ -104,11 +104,12 @@ function ManageStaffPage() {
         actionBtnContent="แก้ไข"
         initialData={!!selectedAdmin ? selectedAdmin : undefined}
         handleOnSubmit={(admin) => editAdmin.mutate(admin)}
+        isPending={editAdmin.isPending}
+        isSuccess={editAdmin.isSuccess}
         {...{
           isOpen: !!selectedAdmin,
           setIsOpen: () => setSelectedAdmin(null),
         }}
-        isPending={editAdmin.isPending}
       />
       <div className="flex-1 flex flex-col">
         <h3 className="text-2xl">จัดการแอดมิน</h3>
@@ -124,8 +125,9 @@ function ManageStaffPage() {
             }
             actionBtnContent="เพิ่มแอดมิน"
             handleOnSubmit={(admin) => addAdmin.mutate(admin)}
-            {...{ isOpen, setIsOpen }}
+            isSuccess={addAdmin.isSuccess}
             isPending={addAdmin.isPending}
+            {...{ isOpen, setIsOpen }}
           />
         </div>
 

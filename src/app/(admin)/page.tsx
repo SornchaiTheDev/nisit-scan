@@ -103,6 +103,7 @@ function ManagePage() {
                 </>
               }
               isPending={createEvent.isPending}
+              isSucces={createEvent.isSuccess}
               {...{ handleOnSubmit, isOpen, setIsOpen }}
             />
           </div>
