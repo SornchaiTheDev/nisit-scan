@@ -192,13 +192,13 @@ function EventClient({ id }: Props) {
     <>
       <button
         className="flex gap-2 mt-2 mb-4 hover:text-gray-500"
-        onClick={() => router.back()}
+        onClick={() => router.push("/")}
       >
         <ArrowLeft />
         ย้อนกลับ
       </button>
       <div className="flex justify-end gap-2 mb-2">
-        <CopyLinkButton link={`${process.env.NEXT_PUBLIC_URL}/event/${id}`} />
+        <CopyLinkButton link={`${process.env.NEXT_PUBLIC_URL}/scan/${id}`} />
         <EventDialog
           key={event?.id}
           initialData={{
