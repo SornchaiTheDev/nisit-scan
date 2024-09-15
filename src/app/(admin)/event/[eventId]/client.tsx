@@ -208,7 +208,11 @@ function EventClient({ id }: Props) {
             date: new Date(event?.date ?? ""),
           }}
           triggerButton={
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <Pencil size="1rem" />
               แก้ไขอีเวนต์
             </Button>
@@ -221,12 +225,17 @@ function EventClient({ id }: Props) {
           }
           handleOnSubmit={async (formData) => editEvent.mutate(formData)}
           isPending={editEvent.isPending}
+          isSuccess={editEvent.isSuccess}
           {...{ isOpen, setIsOpen }}
         />
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="destructive"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <Trash size="1rem" />
               ลบอีเวนต์
             </Button>

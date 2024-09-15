@@ -55,7 +55,7 @@ export default function EventDialog({
     if (isSuccess) {
       form.reset();
     }
-  }, [isSuccess, form]);
+  }, [isSucces, form]);
 
   return (
     <>

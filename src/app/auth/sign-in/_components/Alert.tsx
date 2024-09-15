@@ -20,6 +20,8 @@ function Alert() {
         break;
     }
   }, [error]);
+
+  return null;
 }
 
 export default Alert;

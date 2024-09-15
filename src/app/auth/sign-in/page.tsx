@@ -5,7 +5,9 @@ import Alert from "./_components/Alert";
 function SignInPage() {
   return (
     <>
-      <Alert />
+      <Suspense>
+        <Alert />
+      </Suspense>
       <div className="flex justify-center items-center h-screen bg-zinc-50">
         <div className="space-y-6">
           <h4 className="text-xl font-medium text-center text-gray-900">
