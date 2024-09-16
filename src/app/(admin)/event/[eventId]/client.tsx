@@ -1,6 +1,6 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
+import dayjs from "~/lib/dayjs";
 import "dayjs/locale/th";
 import {
   ArrowLeft,
@@ -78,7 +78,7 @@ function EventClient({ id }: Props) {
   const _date = dayjs(event?.date).locale("th");
   const day = _date.format("DD");
   const month = _date.format("MMM");
-  const year = parseInt(_date.format("YYYY")) + 543;
+  const year = _date.format("BBBB");
 
   const [search, setSearch] = useState("");
 

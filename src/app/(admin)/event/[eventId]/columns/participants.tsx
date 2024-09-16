@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
+import dayjs from "~/lib/dayjs";
 import { Participant } from "~/types/Event";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -36,6 +36,6 @@ export const participantsColumns: ColumnDef<Participant>[] = [
     accessorKey: "timestamp",
     header: "เวลาเข้าร่วม",
     cell: ({ row }) =>
-      dayjs(row.getValue("timestamp")).format("DD/MM/YYYY HH:mm:ss"),
+      dayjs(row.getValue("timestamp")).format("DD/MM/BBBB HH:mm:ss"),
   },
 ];

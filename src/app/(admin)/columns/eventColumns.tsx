@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
+import dayjs from "~/lib/dayjs";
 import Link from "next/link";
 import type { Event } from "~/types/Event";
 
@@ -14,7 +14,7 @@ export const eventsColumns: ColumnDef<Event>[] = [
   {
     accessorKey: "date",
     header: "วันที่",
-    cell: ({ row }) => dayjs(row.getValue("date")).format("DD/MM/YYYY"),
+    cell: ({ row }) => dayjs(row.getValue("date")).format("DD/MM/BBBB"),
   },
   {
     accessorKey: "place",

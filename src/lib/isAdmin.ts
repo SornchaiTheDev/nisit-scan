@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from "~/lib/dayjs";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { AccessToken } from "~/types";

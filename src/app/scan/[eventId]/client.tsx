@@ -1,7 +1,7 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import dayjs from "dayjs";
+import dayjs from "~/lib/dayjs";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
