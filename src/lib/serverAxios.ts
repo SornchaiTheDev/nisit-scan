@@ -10,7 +10,7 @@ export const serverApi = async () => {
     .reduce((acc, { name, value }) => (acc += `${name}=${value};`), "");
 
   return axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    baseURL: process.env.API_URL,
     headers: {
       Cookie: parsedCookies,
     },

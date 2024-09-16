@@ -72,6 +72,8 @@ function EventClient({ id }: Props) {
     queryFn: () => getEventFn(id),
   });
 
+  const webUrl = window.location.origin;
+
   const name = event?.name ?? "";
   const place = event?.place ?? "";
   const host = event?.host ?? "";
@@ -211,7 +213,7 @@ function EventClient({ id }: Props) {
         ย้อนกลับ
       </button>
       <div className="flex justify-end gap-2 mb-2">
-        <CopyLinkButton link={`${process.env.NEXT_PUBLIC_URL}/scan/${id}`} />
+        <CopyLinkButton link={`${webUrl}/scan/${id}`} />
         <EventDialog
           key={event?.id}
           initialData={{

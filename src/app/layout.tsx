@@ -6,6 +6,12 @@ import QueryWrapper from "~/wrapper/QueryWrapper";
 import RouteChangedWrapper from "~/wrapper/RouteChangedWrapper";
 import Loading from "~/components/ui/loading";
 
+declare global {
+  interface Window {
+    API_URL: string;
+  }
+}
+
 const prompt = Prompt({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -24,6 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={prompt.className}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.API_URL="${process.env.API_URL}"`,
+          }}
+        ></script>
         <RouteChangedWrapper>
           <QueryWrapper>
             <Loading />

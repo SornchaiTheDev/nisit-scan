@@ -9,7 +9,7 @@ function SignInButton() {
 
   const handleLogin = () => {
     window.location.href =
-      process.env.NEXT_PUBLIC_API_URL +
+      window.API_URL +
       "/auth/google" +
       (redirect_to ? `?redirect_to=${redirect_to}` : "");
   };
