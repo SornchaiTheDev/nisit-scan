@@ -48,6 +48,7 @@ import { Table } from "@tanstack/react-table";
 import { Tag, TagInput } from "emblor";
 import { setStaffsFn } from "~/requests/staff";
 import CopyLinkButton from "./_components/CopyLinkButton";
+import { AxiosError } from "axios";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -96,9 +97,10 @@ function EventClient({ id }: Props) {
   const deleteEvent = useMutation({
     mutationFn: removeEventFn,
     onSuccess: () => {
-      router.push("/manage");
+      router.push("/");
       toast.success("ลบอีเวนต์สำเร็จ");
     },
+    onError: () => toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"),
   });
 
   const editEvent = useMutation({
@@ -107,6 +109,15 @@ function EventClient({ id }: Props) {
       toast.success("แก้ไขอีเวนต์สำเร็จ");
       setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["event", id] });
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.data.code === "EVENT_ALREADY_EXISTS") {
+          toast.error("อีเวนต์นี้มีอยู่แล้ว");
+        }
+        return;
+      }
+      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
     },
   });
 
@@ -131,6 +142,7 @@ function EventClient({ id }: Props) {
       toast.success("ลบผู้เข้าร่วมสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["participants", pagination] });
     },
+    onError: () => toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"),
   });
 
   const handleOnDeleteRows = (table: Table<Participant>) => {
@@ -180,6 +192,7 @@ function EventClient({ id }: Props) {
       toast.success("แก้ไขเจ้าหน้าที่สำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["event", id] });
     },
+    onError: () => toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"),
   });
 
   const staffsEvent = staffsInput.map((tag) => tag.text);

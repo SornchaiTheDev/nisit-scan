@@ -18,7 +18,7 @@ import AdminDialog from "./_components/AdminDialog";
 import { toast } from "sonner";
 import { queryClient } from "~/wrapper/QueryWrapper";
 import { AxiosError } from "axios";
-import _, { add } from "lodash";
+import _ from "lodash";
 import { AdminSchema } from "~/schemas/adminSchema";
 
 function ManageStaffPage() {
@@ -35,6 +35,7 @@ function ManageStaffPage() {
       toast.success("ลบแอดมินสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["admins", pagination] });
     },
+    onError: () => toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"),
   });
 
   const handleOnDeleteRows = async (table: Table<Admin>) => {
@@ -77,8 +78,10 @@ function ManageStaffPage() {
       if (err instanceof AxiosError) {
         if (err.response?.data.code === "ADMIN_ALREADY_EXISTS") {
           toast.error("อีเมลล์นี้มีอยู่ในระบบแล้ว");
+          return;
         }
       }
+      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
     },
   });
 
@@ -93,6 +96,15 @@ function ManageStaffPage() {
       setSelectedAdmin(null);
       toast.success("แก้ไขแอดมินสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["admins", pagination] });
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.data.code === "ADMIN_ALREADY_EXISTS") {
+          toast.error("อีเมลล์นี้มีอยู่ในระบบแล้ว");
+          return;
+        }
+      }
+      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
     },
   });
 

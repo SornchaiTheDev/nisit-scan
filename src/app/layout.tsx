@@ -24,8 +24,8 @@ export default function RootLayout({
       <body className={prompt.className}>
         <QueryWrapper>
           <Toaster
-            richColors
             position="top-right"
+            closeButton
             toastOptions={{ className: "text-lg" }}
           />
           {children}

@@ -7,7 +7,6 @@ import { Button } from "~/components/ui/button";
 import EventDialog from "./components/EventDialog";
 import { createEventFn, getEventPaginationFn } from "~/requests/event";
 import { queryClient } from "~/wrapper/QueryWrapper";
-import { EventSchema } from "~/schemas/eventSchema";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
@@ -17,31 +16,28 @@ import _ from "lodash";
 import { eventsColumns } from "./columns/eventColumns";
 
 function ManagePage() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const createEvent = useMutation({
     mutationFn: createEventFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-    },
-  });
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOnSubmit = async (formData: EventSchema) => {
-    try {
-      await createEvent.mutateAsync(formData);
       toast.success("สร้างอีเวนต์สำเร็จ");
+      queryClient.invalidateQueries({ queryKey: ["events"] });
       setIsOpen(false);
-    } catch (err) {
+    },
+    onError: (err) => {
       if (err instanceof AxiosError) {
         const { response } = err;
         if (response?.data.code === "EVENT_ALREADY_EXISTS") {
           toast.error("เกิดข้อผิดพลาด", {
             description: "อีเวนต์นี้มีอยู่แล้ว",
           });
+          return;
         }
       }
-    }
-  };
+      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    },
+  });
 
   const [search, setSearch] = useState("");
 
@@ -104,7 +100,8 @@ function ManagePage() {
               }
               isPending={createEvent.isPending}
               isSuccess={createEvent.isSuccess}
-              {...{ handleOnSubmit, isOpen, setIsOpen }}
+              handleOnSubmit={createEvent.mutate}
+              {...{ isOpen, setIsOpen }}
             />
           </div>
         )}

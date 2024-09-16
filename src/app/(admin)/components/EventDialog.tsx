@@ -19,7 +19,7 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 
 interface Props {
   triggerButton: ReactNode;
-  handleOnSubmit: (formData: EventSchema) => Promise<void>;
+  handleOnSubmit: (formData: EventSchema) => void;
   isPending: boolean;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
