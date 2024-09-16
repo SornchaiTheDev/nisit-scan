@@ -366,7 +366,7 @@ function EventClient({ id }: Props) {
           บันทึก
         </Button>
       </div>
-      <div className="mt-10">
+      <div className="mt-2">
         <h5 className="mb-4">ผู้เข้าร่วมงาน</h5>
         <DataTable
           topSection={(table) => (
