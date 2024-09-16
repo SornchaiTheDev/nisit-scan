@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "~/lib/dayjs";
-import Link from "next/link";
+import Link from "~/components/ui/link";
 import type { Event } from "~/types/Event";
 
 export const eventsColumns: ColumnDef<Event>[] = [
