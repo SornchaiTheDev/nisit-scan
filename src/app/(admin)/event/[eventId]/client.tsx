@@ -75,7 +75,7 @@ function EventClient({ id }: Props) {
   const name = event?.name ?? "";
   const place = event?.place ?? "";
   const host = event?.host ?? "";
-  const _date = dayjs(event?.date).locale("th");
+  const _date = dayjs(event?.date);
   const day = _date.format("DD");
   const month = _date.format("MMM");
   const year = _date.format("BBBB");
@@ -163,7 +163,7 @@ function EventClient({ id }: Props) {
     const csv = participants.participants
       .map(
         ({ barcode, timestamp }) =>
-          `${barcode},${dayjs(timestamp).format("DD/MM/YYYY HH:mm:ss")}`,
+          `${barcode},${dayjs(timestamp).format("DD/MM/BBBB HH:mm:ss")}`,
       )
       .join("\n");
 
