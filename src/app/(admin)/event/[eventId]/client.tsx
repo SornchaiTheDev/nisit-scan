@@ -78,7 +78,7 @@ function EventClient({ id }: Props) {
   const _date = dayjs(event?.date).locale("th");
   const day = _date.format("DD");
   const month = _date.format("MMM");
-  const year = _date.format("YYYY");
+  const year = parseInt(_date.format("YYYY")) + 543;
 
   const [search, setSearch] = useState("");
 
@@ -172,7 +172,7 @@ function EventClient({ id }: Props) {
 
     const a = document.createElement("a");
     a.href = url;
-    const fileName = `${name.replace(/\s/g, "_")}_${day}_${month}_participants.csv`;
+    const fileName = `${name.replace(/\s/g, "_")}_${day}_${month}_${year}_participants.csv`;
     a.download = fileName;
     a.click();
   };
