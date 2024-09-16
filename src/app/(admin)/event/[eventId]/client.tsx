@@ -204,7 +204,7 @@ function EventClient({ id }: Props) {
   return (
     <>
       <button
-        className="flex gap-2 mt-2 mb-4 hover:text-gray-500"
+        className="flex gap-2 mt-2 mb-4 hover:text-gray-500 w-fit"
         onClick={() => router.push("/")}
       >
         <ArrowLeft />
