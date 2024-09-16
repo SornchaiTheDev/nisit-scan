@@ -35,7 +35,15 @@ function ManageStaffPage() {
       toast.success("ลบแอดมินสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["admins", pagination] });
     },
-    onError: () => toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"),
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.data.code === "CANNOT_DELETE_SELF") {
+          toast.error("ไม่สามารถลบตัวเองได้");
+          return;
+        }
+      }
+      toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    },
   });
 
   const handleOnDeleteRows = async (table: Table<Admin>) => {
