@@ -47,6 +47,11 @@ export default function EventDialog({
     },
   });
 
+  useEffect(() => {
+    if (!initialData) return;
+    form.reset(initialData);
+  }, [initialData, form]);
+
   const onSubmit = form.handleSubmit(handleOnSubmit);
 
   const disabledSubmitButton = !form.formState.isValid || isPending;
