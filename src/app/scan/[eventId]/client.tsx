@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Skeleton } from "~/components/ui/skeleton";
-import useScanner from "~/hooks/useScanner";
+import useScanner, { type ScanEventPayload } from "~/hooks/useScanner";
 import { api } from "~/lib/axios";
 import { addParticipantFn, getEventFn } from "~/requests/event";
 
@@ -40,14 +40,15 @@ function EventClient({ name, id, role }: Props) {
   });
 
   const addParticipant = useMutation({
-    mutationFn: (barcode: string) => addParticipantFn(id, barcode),
+    mutationFn: (res: ScanEventPayload) => addParticipantFn(id, res),
     onSuccess: () => {
       toast.success("ลงทะเบียนนิสิตสำเร็จ");
     },
     onError: (err) => {
       if (err instanceof AxiosError) {
         if (err.response?.data.code === "PARTICIPANT_ALREADY_EXISTS") {
-          return toast.error("นิสิตลงทะเบียนไปแล้ว");
+          toast.error("นิสิตลงทะเบียนไปแล้ว");
+          return;
         }
       }
       toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
@@ -63,7 +64,7 @@ function EventClient({ name, id, role }: Props) {
     clearResult,
     isNoCamera,
   } = useScanner({
-    onScan: (res) => addParticipant.mutate(res.barcode),
+    onScan: (res) => addParticipant.mutate(res),
   });
 
   const router = useRouter();

@@ -1,12 +1,12 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type ScanResult = {
+type ScanResult = {
   barcode: string | null;
   timestamp: Date | null;
 };
 
-type ScanEventPayload = {
+export type ScanEventPayload = {
   barcode: string;
   timestamp: Date;
 };
