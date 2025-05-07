@@ -9,7 +9,7 @@ export const GET = (req: Request) => {
   cookies().delete("refreshToken");
   cookies().delete("session_id");
 
-  const origin = url.origin;
+  const origin = process.env.WEB_URL;
 
   redirect(
     `${origin}/jo.in/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
