@@ -9,5 +9,9 @@ export const GET = (req: Request) => {
   cookies().delete("refreshToken");
   cookies().delete("session_id");
 
-  redirect(`/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`);
+  const origin = url.origin;
+
+  redirect(
+    `${origin}/jo.in/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
+  );
 };

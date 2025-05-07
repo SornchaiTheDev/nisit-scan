@@ -21,7 +21,7 @@ function SideBar({ name }: Props) {
   const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = "/auth/sign-out";
+    window.location.href = "/jo.in/auth/sign-out";
   };
 
   return (
