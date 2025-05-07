@@ -2,6 +2,7 @@ import { Calendar, LogOut, Menu, UserRound, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { getBasePath } from "~/lib/getBasePath";
 import { cn } from "~/lib/utils";
 
 interface Props {
@@ -21,7 +22,7 @@ function Hamburger({ name }: Props) {
   const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = "/auth/sign-out";
+    window.location.href = `/${getBasePath()}/auth/sign-out`;
   };
 
   return (
