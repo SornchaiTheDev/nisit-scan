@@ -3,6 +3,7 @@
 import { Calendar, LogOut, UserRound } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
+import { getBasePath } from "~/lib/getBasePath";
 import { cn } from "~/lib/utils";
 
 interface Props {
@@ -21,7 +22,7 @@ function SideBar({ name }: Props) {
   const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = "/jo.in/auth/sign-out";
+    window.location.href = `${getBasePath()}/auth/sign-out`;
   };
 
   return (

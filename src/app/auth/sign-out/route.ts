@@ -1,5 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getBasePath } from "~/lib/getBasePath";
+
+export const dynamic = "force-dynamic";
 
 export const GET = (req: Request) => {
   const url = new URL(req.url);
@@ -12,6 +15,6 @@ export const GET = (req: Request) => {
   const origin = process.env.WEB_URL;
 
   redirect(
-    `${origin}/jo.in/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
+    `${origin}/${getBasePath()}/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
   );
 };

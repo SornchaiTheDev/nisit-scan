@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Button } from "~/components/ui/button";
+import { getBasePath } from "~/lib/getBasePath";
 
 function SignInButton() {
   const urlParms = useSearchParams();
@@ -9,7 +10,7 @@ function SignInButton() {
 
   const handleLogin = () => {
     window.location.href =
-      window.API_URL +
+      window.env.API_URL +
       "/auth/google" +
       (redirect_to ? `?redirect_to=${redirect_to}` : "");
   };
@@ -21,7 +22,7 @@ function SignInButton() {
       className="w-[400px] h-12 text-gray-900"
     >
       <Image
-        src="/jo.in/icons/google-icon.svg"
+        src={`${getBasePath()}/icons/google-icon.svg`}
         alt="Google Icon"
         width={24}
         height={24}
