@@ -24,7 +24,6 @@ import {
 } from "~/components/ui/select";
 import { Skeleton } from "~/components/ui/skeleton";
 import useScanner, { type ScanEventPayload } from "~/hooks/useScanner";
-import { api } from "~/lib/axios";
 import { addParticipantFn, getEventFn } from "~/requests/event";
 
 interface Props {
@@ -70,7 +69,7 @@ function EventClient({ name, id, role }: Props) {
   const router = useRouter();
 
   const handleLogout = async () => {
-    router.push("/auth/sign-out?redirect_to=/event/${id}");
+    router.push(`/auth/sign-out?redirect_to=/scan/${id}`);
   };
 
   return (
