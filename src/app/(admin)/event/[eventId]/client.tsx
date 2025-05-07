@@ -49,6 +49,7 @@ import { Tag, TagInput } from "emblor";
 import { setStaffsFn } from "~/requests/staff";
 import CopyLinkButton from "./_components/CopyLinkButton";
 import { AxiosError } from "axios";
+import { getBasePath } from "~/lib/getBasePath";
 
 const EventDateLoading = () => (
   <div className="flex flex-col items-center gap-2">
@@ -213,7 +214,7 @@ function EventClient({ id }: Props) {
         ย้อนกลับ
       </button>
       <div className="flex justify-end gap-2 mb-2">
-        <CopyLinkButton link={`${webUrl}/scan/${id}`} />
+        <CopyLinkButton link={`${webUrl}/${getBasePath()}/scan/${id}`} />
         <EventDialog
           key={event?.id}
           initialData={{

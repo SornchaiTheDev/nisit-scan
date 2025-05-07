@@ -22,7 +22,7 @@ function SideBar({ name }: Props) {
   const router = useRouter();
 
   const handleLogout = () => {
-    window.location.href = `${getBasePath()}/auth/sign-out`;
+    window.location.href = `/${getBasePath()}/auth/sign-out`;
   };
 
   return (
