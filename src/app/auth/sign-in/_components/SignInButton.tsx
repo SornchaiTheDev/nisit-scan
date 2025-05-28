@@ -5,14 +5,13 @@ import { Button } from "~/components/ui/button";
 import { getBasePath } from "~/lib/getBasePath";
 
 function SignInButton() {
-  const urlParms = useSearchParams();
-  const redirect_to = urlParms.get("redirect_to");
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect_to");
 
   const handleLogin = () => {
-    window.location.href =
-      window.env.API_URL +
-      "/auth/google" +
-      (redirect_to ? `?redirect_to=${redirect_to}` : "");
+    const redirectParams = !!redirectTo ? `?redirect_to=${redirectTo}` : "";
+
+    window.location.href = window.env.API_URL + "/auth/google" + redirectParams;
   };
 
   return (
