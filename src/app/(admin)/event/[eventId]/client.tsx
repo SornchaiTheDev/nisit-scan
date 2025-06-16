@@ -18,11 +18,12 @@ import { participantsColumns } from "./columns/participants";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
 import {
-  getParticipantsFn,
   removeParticipantFn,
   removeEventFn,
   editEventFn,
   getEventFn,
+  getAllParticipantsFn,
+  getPaginationParticipantsFn,
 } from "~/requests/event";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -85,14 +86,24 @@ function EventClient({ id }: Props) {
 
   const [search, setSearch] = useState("");
 
+  const { data: participants } = useQuery({
+    queryKey: ["participants", "all"],
+    queryFn: () => getAllParticipantsFn(id),
+  });
+
   const {
-    data: participants,
+    data: paginationParticipants,
     isLoading: isPartiLoading,
     refetch,
   } = useQuery({
     queryKey: ["participants", pagination],
     queryFn: () =>
-      getParticipantsFn(id, search, pagination.pageIndex, pagination.pageSize),
+      getPaginationParticipantsFn(
+        id,
+        search,
+        pagination.pageIndex,
+        pagination.pageSize,
+      ),
   });
 
   const router = useRouter();
@@ -159,11 +170,11 @@ function EventClient({ id }: Props) {
     table.resetRowSelection();
   };
 
-  const noParticipants = participants?.participants.length === 0;
+  const noParticipants = paginationParticipants?.participants.length === 0;
   const handleExportAsCSV = () => {
     if (participants === undefined) return;
 
-    const csv = participants.participants
+    const csv = participants
       .map(
         ({ barcode, timestamp }) =>
           `${barcode},${dayjs(timestamp).format("DD/MM/BBBB HH:mm:ss")}`,
@@ -419,9 +430,9 @@ function EventClient({ id }: Props) {
             </div>
           )}
           isLoading={isPartiLoading}
-          totalRows={participants?.totalRows ?? 0}
+          totalRows={paginationParticipants?.totalRows ?? 0}
           columns={participantsColumns}
-          data={participants?.participants ?? []}
+          data={paginationParticipants?.participants ?? []}
           {...{ pagination, setPagination }}
         />
       </div>

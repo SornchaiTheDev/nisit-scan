@@ -6,7 +6,7 @@ interface Response {
   participants: Participant[];
 }
 
-export const getParticipantsFn = async (
+export const getPaginationParticipantsFn = async (
   eventId: string,
   barcode: string,
   pageIndex: number,
