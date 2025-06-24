@@ -49,7 +49,14 @@ function EventClient({ name, id, role }: Props) {
           toast.info("นิสิตลงทะเบียนไปแล้ว");
           return;
         }
+
+        if (err.response?.status === 401) {
+          toast.error("กรุณาเข้าสู่ระบบใหม่");
+          router.push(`/auth/sign-out?redirect_to=/scan/${id}`);
+          return;
+        }
       }
+
       toast.error("เกิดข้อผิดพลาดในการลงทะเบียน");
     },
   });
