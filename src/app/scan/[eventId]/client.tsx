@@ -46,7 +46,7 @@ function EventClient({ name, id, role }: Props) {
     onError: (err) => {
       if (err instanceof AxiosError) {
         if (err.response?.data.code === "PARTICIPANT_ALREADY_EXISTS") {
-          toast.error("นิสิตลงทะเบียนไปแล้ว");
+          toast.info("นิสิตลงทะเบียนไปแล้ว");
           return;
         }
       }

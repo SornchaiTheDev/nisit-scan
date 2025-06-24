@@ -1,5 +1,6 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type ScanResult = {
   barcode: string | null;
@@ -66,13 +67,20 @@ function useScanner(props?: Props) {
         videoRef.current,
       );
 
+      const barcode = result.getText();
+
+      if (!barcode.startsWith("200") || barcode.length !== 14) {
+        toast.error("รูปแบบรหัสบาร์โค้ดไม่ถูกต้อง");
+        return
+      }
+
       setScanResult({
-        barcode: result.getText(),
+        barcode,
         timestamp: new Date(result.getTimestamp()),
       });
 
       onScan({
-        barcode: result.getText(),
+        barcode,
         timestamp: new Date(result.getTimestamp()),
       });
     };

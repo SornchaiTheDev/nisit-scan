@@ -43,6 +43,7 @@ export default function RootLayout({
             <Toaster
               position="top-right"
               closeButton
+              richColors
               toastOptions={{ className: "text-lg" }}
             />
             {children}
