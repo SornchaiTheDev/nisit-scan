@@ -350,7 +350,9 @@ function EventClient({ id }: Props) {
         </div>
       </div>
       <div className="w-full bg-white rounded-lg border border-slate-200 my-4 p-4">
-        <h5 className="text-sm text-gray-600">เจ้าหน้าที่</h5>
+        <h5 className="text-sm text-gray-600">
+          เจ้าหน้าที่ (ระบุ email @ku.th) ที่จะให้สิทธิ์สแกน
+        </h5>
         <div className="mt-2">
           {isEventLoading ? (
             <Skeleton className="w-full h-12" />
@@ -363,6 +365,13 @@ function EventClient({ id }: Props) {
                 tag: {
                   body: "pl-2 bg-gray-100 rounded-lg",
                 },
+                tagList: {
+                  container: "flex flex-wrap gap-2",
+                },
+              }}
+              validateTag={(tag) => {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@ku\.th$/;
+                return emailRegex.test(tag);
               }}
               placeHolder="กรอกอีเมลเจ้าหน้าที่แล้ว Enter"
               activeTagIndex={activeTagIndex}
