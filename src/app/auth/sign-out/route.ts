@@ -12,7 +12,7 @@ export const GET = (req: Request) => {
   cookies().delete("refreshToken");
   cookies().delete("session_id");
 
-  const origin = process.env.WEB_URL;
+  const origin = process.env.WEB_ORIGIN;
 
   redirect(
     `${origin}/${getBasePath()}/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
