@@ -127,7 +127,7 @@ function EventClient({ name, id, role }: Props) {
             <DialogTitle>ผลการแสกนบาร์โค้ด</DialogTitle>
             <h5 className="mt-4">หมายเลขบาร์โค้ด</h5>
             <h4 className="text-xl">{payload?.barcode}</h4>
-            <h5 className="mt-4">รายละเอียดผู้ใช้</h5>
+            <h5 className="mt-4">รายละเอียดนิสิต</h5>
             <h4 className="text-xl">
               {user.isFetching
                 ? "กำลังโหลด"

@@ -35,7 +35,7 @@ function ImportUserDialog() {
   const importUser = useMutation({
     mutationFn: importUsersFn,
     onSuccess: async () => {
-      toast.success("Import ผู้ใช้สำเร็จ");
+      toast.success("Import ข้อมูลนิสิตสำเร็จ");
       await queryClient.refetchQueries({ queryKey: ["users"] });
       setIsOpen(false);
       setRawContent("");
@@ -43,7 +43,7 @@ function ImportUserDialog() {
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Import ผู้ใช้ไม่สำเร็จ");
+      toast.error("Import ข้อมูลนิสิตไม่สำเร็จ");
     },
   });
 
@@ -75,12 +75,12 @@ function ImportUserDialog() {
           size="sm"
         >
           <FileUp size="1rem" />
-          Import ผู้ใช้
+          Import ข้อมูลนิสิต
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Import ผู้ใช้</DialogTitle>
+          <DialogTitle>Import ข้อมูลนิสิต</DialogTitle>
         </DialogHeader>
         <Tabs
           value={selectedTab}

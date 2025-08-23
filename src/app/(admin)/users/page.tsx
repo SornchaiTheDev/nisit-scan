@@ -29,7 +29,7 @@ function ManageStaffPage() {
   const removeUsers = useMutation({
     mutationFn: removeUsersFn,
     onSuccess: () => {
-      toast.success("ลบผู้ใช้สำเร็จ");
+      toast.success("ลบข้อมูลนิสิตสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["users", pagination] });
     },
     onError: (err) => {
@@ -76,7 +76,7 @@ function ManageStaffPage() {
     mutationFn: addUserFn,
     onSuccess: () => {
       setIsOpen(false);
-      toast.success("เพิ่มผู้ใช้สำเร็จ");
+      toast.success("เพิ่มข้อมูลนิสิตสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["users", pagination] });
     },
     onError: (err) => {
@@ -99,7 +99,7 @@ function ManageStaffPage() {
     mutationFn: (user: UserSchema) => editUserFn(selectedUser?.code!, user),
     onSuccess: () => {
       setSelectedUser(null);
-      toast.success("แก้ไขผู้ใช้สำเร็จ");
+      toast.success("แก้ไขข้อมูลนิสิตสำเร็จ");
       queryClient.invalidateQueries({ queryKey: ["users", pagination] });
     },
     onError: (err) => {
@@ -117,7 +117,7 @@ function ManageStaffPage() {
     <>
       <UserDialog
         key={selectedUser?.code}
-        title="แก้ไขผู้ใช้"
+        title="แก้ไขข้อมูลนิสิต"
         actionBtnContent="แก้ไข"
         initialData={!!selectedUser ? selectedUser : undefined}
         handleOnSubmit={(user) => editUser.mutate(user)}
@@ -129,18 +129,18 @@ function ManageStaffPage() {
         }}
       />
       <div className="flex-1 flex flex-col">
-        <h3 className="text-2xl">จัดการผู้ใช้</h3>
+        <h3 className="text-2xl">จัดการข้อมูลนิสิต</h3>
 
         <div className="flex justify-end mb-4 mt-2 gap-2">
           <UserDialog
-            title="เพิ่มผู้ใช้ใหม่"
+            title="เพิ่มข้อมูลนิสิตใหม่"
             triggerButton={
               <Button className="flex gap-2" size="sm">
                 <UserRoundPlus size="1rem" />
-                เพิ่มผู้ใช้
+                เพิ่มข้อมูลนิสิต
               </Button>
             }
-            actionBtnContent="เพิ่มผู้ใช้"
+            actionBtnContent="เพิ่มข้อมูลนิสิต"
             handleOnSubmit={(user) => addUser.mutate(user)}
             isSuccess={addUser.isSuccess}
             isPending={addUser.isPending}
@@ -159,7 +159,7 @@ function ManageStaffPage() {
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="ค้นหาผู้ใช้"
+                    placeholder="ค้นหาข้อมูลนิสิต"
                     className="max-w-[300px] pl-8"
                   />
                   <Search

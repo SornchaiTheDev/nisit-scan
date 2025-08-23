@@ -54,7 +54,7 @@ function SideBar({ name }: Props) {
             )}
           >
             <UserRound size="1rem" />
-            จัดการผู้ใช้
+            จัดการข้อมูลนิสิต
           </button>
           <button
             onClick={() => router.push(adminPath)}
