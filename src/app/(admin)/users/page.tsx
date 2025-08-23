@@ -16,6 +16,7 @@ import { getUserPaginationFn } from "~/requests/user/getUserPaginationFn";
 import UserDialog from "./components/UserDialog";
 import { UserSchema } from "~/schemas/userSchema";
 import { addUserFn, editUserFn, removeUsersFn } from "~/requests/user";
+import ImportUserDialog from "./components/ImportUserDialog";
 
 function ManageStaffPage() {
   const [search, setSearch] = useState("");
@@ -130,7 +131,7 @@ function ManageStaffPage() {
       <div className="flex-1 flex flex-col">
         <h3 className="text-2xl">จัดการผู้ใช้</h3>
 
-        <div className="flex justify-end mb-4 mt-2">
+        <div className="flex justify-end mb-4 mt-2 gap-2">
           <UserDialog
             title="เพิ่มผู้ใช้ใหม่"
             triggerButton={
@@ -145,6 +146,7 @@ function ManageStaffPage() {
             isPending={addUser.isPending}
             {...{ isOpen, setIsOpen }}
           />
+          <ImportUserDialog />
         </div>
 
         <DataTable
