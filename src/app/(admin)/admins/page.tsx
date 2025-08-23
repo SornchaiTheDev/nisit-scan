@@ -12,7 +12,7 @@ import {
   getAdminPaginationFn,
   removeAdminsFn,
 } from "~/requests/admin";
-import { adminsColumns } from "./columns/adminColumn";
+import { adminsColumns } from "./columns/admin.column";
 import { Admin } from "~/types";
 import AdminDialog from "./_components/AdminDialog";
 import { toast } from "sonner";
