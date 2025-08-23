@@ -19,7 +19,7 @@ function BarcodeScanner({ onScan }: Props) {
       <label>สำหรับยิงบาร์โค้ด</label>
       <form onSubmit={handleOnSubmit}>
         <input
-          className="text-xl "
+          className="text-xl border rounded-lg p-2"
           autoFocus
           value={barcode}
           onChange={(e) => setBarcode(e.target.value)}
