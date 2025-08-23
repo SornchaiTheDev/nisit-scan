@@ -1,11 +1,7 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-
-type ScanResult = {
-  barcode: string | null;
-  timestamp: Date | null;
-};
+import { ScanResult } from "~/types";
 
 export type ScanEventPayload = {
   barcode: string;
@@ -71,7 +67,7 @@ function useScanner(props?: Props) {
 
       if (!barcode.startsWith("200") || barcode.length !== 14) {
         toast.error("รูปแบบรหัสบาร์โค้ดไม่ถูกต้อง");
-        return
+        return;
       }
 
       setScanResult({

@@ -1,11 +1,16 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import dayjs from "~/lib/dayjs";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
+import { type ScanEventPayload } from "~/hooks/useScanner";
+import { addParticipantFn, getEventFn } from "~/requests/event";
+import BarcodeScanner from "./components/BarcodeScanner";
+import { useState } from "react";
+import QRCodeScanner from "./components/QRCodeScanner";
 import {
   Dialog,
   DialogContent,
@@ -13,18 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { Skeleton } from "~/components/ui/skeleton";
-import useScanner, { type ScanEventPayload } from "~/hooks/useScanner";
-import { addParticipantFn, getEventFn } from "~/requests/event";
+import dayjs from "~/lib/dayjs";
+import { getUserByCodeFn } from "~/requests/user";
 
 interface Props {
   name: string;
@@ -61,23 +56,28 @@ function EventClient({ name, id, role }: Props) {
     },
   });
 
-  const {
-    selectedCamera,
-    cameras,
-    videoRef,
-    onChangeCameraSource,
-    scanResult,
-    clearResult,
-    isNoCamera,
-  } = useScanner({
-    onScan: (res) => addParticipant.mutate(res),
-  });
-
   const router = useRouter();
 
   const handleLogout = async () => {
     router.push(`/auth/sign-out?redirect_to=/scan/${id}`);
   };
+
+  const [payload, setPayload] = useState<ScanEventPayload | null>(null);
+  const isScanned = payload !== null;
+
+  const handleOnScan = (payload: ScanEventPayload) => {
+    setPayload(payload);
+    addParticipant.mutate(payload);
+  };
+
+  const clearResult = () => setPayload(null);
+
+  const user = useQuery({
+    queryKey: ["users", payload?.barcode],
+    queryFn: () => getUserByCodeFn(payload?.barcode ?? ""),
+  });
+
+  const isNoUserData = !user.isFetching && user.data === null;
 
   return (
     <div className="p-4 flex flex-col h-screen">
@@ -105,22 +105,29 @@ function EventClient({ name, id, role }: Props) {
           )}
         </div>
       </div>
-      <Dialog open={scanResult.barcode !== null} onOpenChange={clearResult}>
+      <Dialog open={isScanned} onOpenChange={clearResult}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>ผลการแสกนบาร์โค้ด</DialogTitle>
             <h5 className="mt-4">หมายเลขบาร์โค้ด</h5>
-            <h4 className="text-xl">{scanResult?.barcode}</h4>
-
+            <h4 className="text-xl">{payload?.barcode}</h4>
+            <h5 className="mt-4">รายละเอียดผู้ใช้</h5>
+            <h4 className="text-xl">
+              {user.isFetching
+                ? "กำลังโหลด"
+                : isNoUserData
+                  ? "ไม่พบข้อมูลในระบบ"
+                  : `${user.data?.full_name} (${user.data?.major})`}
+            </h4>
             <h5 className="mt-4">แสกนเมื่อ</h5>
             <h4 className="text-xl">
-              {dayjs(scanResult?.timestamp).format("DD-MM-YYYY HH:mm:ss")}
+              {dayjs(payload?.timestamp).format("DD-MM-YYYY HH:mm:ss")}
             </h4>
             <DialogFooter>
               <Button
                 disabled={addParticipant.isPending}
-                onClick={clearResult}
                 className="w-full mt-4"
+                onClick={clearResult}
               >
                 {addParticipant.isPending ? "กำลังตรวจสอบ" : "ปิด"}
               </Button>
@@ -128,30 +135,10 @@ function EventClient({ name, id, role }: Props) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+
       <div className="mt-10 flex-1 flex flex-col justify-center items-center">
-        <video className="rounded-2xl" autoPlay ref={videoRef}></video>
-        <div className="mt-4">
-          <Select
-            value={selectedCamera ?? undefined}
-            onValueChange={onChangeCameraSource}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={selectedCamera ?? "เลือกกล้อง"} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {isNoCamera && (
-                  <SelectLabel className="font-normal">ไม่พบกล้อง</SelectLabel>
-                )}
-                {cameras.map(({ deviceId, label }) => (
-                  <SelectItem value={deviceId} key={deviceId}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+        <BarcodeScanner onScan={handleOnScan} />
+        <QRCodeScanner onScan={handleOnScan} />
       </div>
     </div>
   );
