@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, LogOut, UserRound } from "lucide-react";
+import { Calendar, LogOut, UserRound, ShieldUser } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { getBasePath } from "~/lib/getBasePath";
@@ -14,9 +14,11 @@ function SideBar({ name }: Props) {
   const pathname = usePathname();
 
   const eventPath = "/";
+  const userPath = "/users";
   const adminPath = "/admins";
 
   const isEvent = pathname === eventPath;
+  const isUser = pathname === userPath;
   const isStaff = pathname === adminPath;
 
   const router = useRouter();
@@ -45,13 +47,23 @@ function SideBar({ name }: Props) {
             จัดการอีเวนต์
           </button>
           <button
+            onClick={() => router.push(userPath)}
+            className={cn(
+              "flex gap-2 items-center p-2 rounded-lg w-full hover:bg-gray-100",
+              isUser && "bg-gray-100",
+            )}
+          >
+            <UserRound size="1rem" />
+            จัดการผู้ใช้
+          </button>
+          <button
             onClick={() => router.push(adminPath)}
             className={cn(
               "flex gap-2 items-center p-2 rounded-lg w-full hover:bg-gray-100",
               isStaff && "bg-gray-100",
             )}
           >
-            <UserRound size="1rem" />
+            <ShieldUser size="1rem" />
             จัดการแอดมิน
           </button>
         </div>
