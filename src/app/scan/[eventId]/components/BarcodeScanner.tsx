@@ -1,17 +1,19 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, RefObject, useState } from "react";
 import { ScanEventPayload } from "~/hooks/useScanner";
 
 interface Props {
   onScan: (barcode: ScanEventPayload) => void;
+  inputRef: RefObject<HTMLInputElement>;
 }
 
-function BarcodeScanner({ onScan }: Props) {
+function BarcodeScanner({ onScan, inputRef }: Props) {
   const [barcode, setBarcode] = useState("");
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onScan({ barcode, timestamp: new Date() });
+    setBarcode("");
   };
 
   return (
@@ -19,6 +21,7 @@ function BarcodeScanner({ onScan }: Props) {
       <label>สำหรับยิงบาร์โค้ด</label>
       <form onSubmit={handleOnSubmit}>
         <input
+          ref={inputRef}
           className="text-xl border rounded-lg p-2"
           autoFocus
           value={barcode}

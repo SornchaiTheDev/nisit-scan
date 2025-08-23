@@ -9,7 +9,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { type ScanEventPayload } from "~/hooks/useScanner";
 import { addParticipantFn, getEventFn } from "~/requests/event";
 import BarcodeScanner from "./components/BarcodeScanner";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import QRCodeScanner from "./components/QRCodeScanner";
 import {
   Dialog,
@@ -66,15 +66,31 @@ function EventClient({ name, id, role }: Props) {
   const isScanned = payload !== null;
 
   const handleOnScan = (payload: ScanEventPayload) => {
+    const code = payload?.barcode.match(/200(\d{10})\d{1}/);
+    if (!code) return toast.error("บาร์โค้ดไม่ถูกต้อง");
+
     setPayload(payload);
     addParticipant.mutate(payload);
   };
 
-  const clearResult = () => setPayload(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const clearResult = () => {
+    setPayload(null);
+    setTimeout(() => {
+      inputRef?.current?.focus();
+    }, 0);
+  };
 
   const user = useQuery({
     queryKey: ["users", payload?.barcode],
-    queryFn: () => getUserByCodeFn(payload?.barcode ?? ""),
+    queryFn: async () => {
+      const code = payload?.barcode.match(/200(\d{10})\d{1}/);
+      if (!code) return null;
+      const matchedGroup = code[1];
+
+      return getUserByCodeFn(matchedGroup);
+    },
   });
 
   const isNoUserData = !user.isFetching && user.data === null;
@@ -137,7 +153,7 @@ function EventClient({ name, id, role }: Props) {
       </Dialog>
 
       <div className="mt-10 flex-1 flex flex-col justify-center items-center">
-        <BarcodeScanner onScan={handleOnScan} />
+        <BarcodeScanner onScan={handleOnScan} inputRef={inputRef} />
         <QRCodeScanner onScan={handleOnScan} />
       </div>
     </div>
