@@ -6,10 +6,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
-import { type ScanEventPayload } from "~/hooks/useScanner";
 import { addParticipantFn, getEventFn } from "~/requests/event";
 import BarcodeScanner from "./components/BarcodeScanner";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import QRCodeScanner from "./components/QRCodeScanner";
 import {
   Dialog,
@@ -20,6 +19,8 @@ import {
 } from "~/components/ui/dialog";
 import dayjs from "~/lib/dayjs";
 import { getUserByCodeFn } from "~/requests/user";
+import { AddParticipantPayload } from "~/types/Particiapnt";
+import { ScanEventPayload } from "~/types";
 
 interface Props {
   name: string;
@@ -34,7 +35,7 @@ function EventClient({ name, id, role }: Props) {
   });
 
   const addParticipant = useMutation({
-    mutationFn: (res: ScanEventPayload) => addParticipantFn(id, res),
+    mutationFn: (res: AddParticipantPayload) => addParticipantFn(id, res),
     onSuccess: () => {
       toast.success("ลงทะเบียนนิสิตสำเร็จ");
     },
@@ -70,7 +71,6 @@ function EventClient({ name, id, role }: Props) {
     if (!code) return toast.error("บาร์โค้ดไม่ถูกต้อง");
 
     setPayload(payload);
-    addParticipant.mutate(payload);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -92,6 +92,16 @@ function EventClient({ name, id, role }: Props) {
       return getUserByCodeFn(matchedGroup);
     },
   });
+
+  useEffect(() => {
+    if (user.data && payload) {
+      addParticipant.mutate({
+        ...payload,
+        student_code: user.data.code,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.data, payload]);
 
   const isNoUserData = !user.isFetching && user.data === null;
 

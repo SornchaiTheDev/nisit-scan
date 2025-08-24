@@ -1,8 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "~/lib/dayjs";
 import { Participant } from "~/types/Event";
-import { Button } from "~/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { Checkbox } from "~/components/ui/checkbox";
 
 export const participantsColumns: ColumnDef<Participant>[] = [
@@ -37,5 +35,21 @@ export const participantsColumns: ColumnDef<Participant>[] = [
     header: "เวลาเข้าร่วม",
     cell: ({ row }) =>
       dayjs(row.getValue("timestamp")).format("DD/MM/BBBB HH:mm:ss"),
+  },
+  {
+    accessorKey: "student_code",
+    header: "รหัสนิสิต",
+  },
+  {
+    accessorKey: "full_name",
+    header: "ชื่อ",
+  },
+  {
+    accessorKey: "gmail",
+    header: "Gmail",
+  },
+  {
+    accessorKey: "major",
+    header: "รหัสสาขา",
   },
 ];

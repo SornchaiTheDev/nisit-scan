@@ -1,12 +1,12 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ScanResult } from "~/types";
+import { ScanEventPayload } from "~/types";
 
-export type ScanEventPayload = {
-  barcode: string;
-  timestamp: Date;
-};
+export interface ScanResult {
+  barcode: string | null;
+  timestamp: Date | null;
+}
 
 interface Props {
   onScan?: (result: ScanEventPayload) => void;

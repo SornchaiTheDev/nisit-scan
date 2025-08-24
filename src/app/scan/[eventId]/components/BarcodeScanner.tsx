@@ -1,6 +1,6 @@
 "use client";
 import { FormEvent, RefObject, useState } from "react";
-import { ScanEventPayload } from "~/hooks/useScanner";
+import { ScanEventPayload } from "~/types";
 
 interface Props {
   onScan: (barcode: ScanEventPayload) => void;

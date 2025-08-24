@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import useScanner, { ScanEventPayload } from "~/hooks/useScanner";
+import useScanner from "~/hooks/useScanner";
+import { ScanEventPayload } from "~/types";
 
 interface Props {
   onScan: (payload: ScanEventPayload) => void;
@@ -25,6 +26,7 @@ function QRCodeScanner({ onScan }: Props) {
   } = useScanner({
     onScan,
   });
+
 
   return (
     <>
@@ -43,7 +45,7 @@ function QRCodeScanner({ onScan }: Props) {
                 <SelectLabel className="font-normal">ไม่พบกล้อง</SelectLabel>
               )}
               {cameras.map(({ deviceId, label }) => (
-                <SelectItem value={deviceId} key={deviceId}>
+                <SelectItem value={deviceId} key={label}>
                   {label}
                 </SelectItem>
               ))}

@@ -2,6 +2,10 @@ export interface Participant {
   id: string;
   barcode: string;
   timestamp: string;
+  student_code: string;
+  full_name: string;
+  gmail: string;
+  major: string;
 }
 
 interface Staff {

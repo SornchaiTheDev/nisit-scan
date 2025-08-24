@@ -174,14 +174,19 @@ function EventClient({ id }: Props) {
   const handleExportAsCSV = () => {
     if (participants === undefined) return;
 
-    const csv = participants
+    const content = participants
       .map(
-        ({ barcode, timestamp }) =>
-          `${barcode},${dayjs(timestamp).format("DD/MM/BBBB HH:mm:ss")}`,
+        ({ barcode, timestamp, student_code, full_name, gmail, major }) =>
+          `${barcode},${dayjs(timestamp).format("DD/MM/BBBB HH:mm:ss")},${student_code},${full_name},${gmail},${major}`,
       )
       .join("\n");
 
-    const blob = new Blob([csv], { type: "text/csv" });
+    const contentWithHeader =
+      "barcode,timestamp,student_code,full_name,gmail,major\n" + content;
+
+    console.log(contentWithHeader);
+
+    const blob = new Blob([contentWithHeader], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
