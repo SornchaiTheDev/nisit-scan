@@ -230,7 +230,7 @@ function EventClient({ id }: Props) {
         ย้อนกลับ
       </button>
       <div className="flex justify-end gap-2 mb-2">
-        <CopyLinkButton link={`${webUrl}/${getBasePath()}/scan/${id}`} />
+        <CopyLinkButton link={`${webUrl}${getBasePath()}/scan/${id}`} />
         <EventDialog
           key={event?.id}
           initialData={{
