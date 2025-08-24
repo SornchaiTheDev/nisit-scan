@@ -15,6 +15,6 @@ export const GET = (req: Request) => {
   const origin = process.env.WEB_ORIGIN;
 
   redirect(
-    `${origin}/${getBasePath()}/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
+    `${origin}${getBasePath()}/auth/sign-in${redirectTo ? `?redirect_to=${redirectTo}` : ""}`,
   );
 };
