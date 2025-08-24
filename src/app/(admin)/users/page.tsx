@@ -45,7 +45,7 @@ function ManageStaffPage() {
 
   const handleOnDeleteRows = async (table: Table<User>) => {
     const rows = table.getFilteredSelectedRowModel().rows;
-    const codes = rows.map((row) => row.original.code);
+    const codes = rows.map((row) => row.original.student_code);
 
     await removeUsers.mutateAsync(codes);
     table.resetRowSelection();
@@ -96,7 +96,7 @@ function ManageStaffPage() {
   };
 
   const editUser = useMutation({
-    mutationFn: (user: UserSchema) => editUserFn(selectedUser?.code!, user),
+    mutationFn: (user: UserSchema) => editUserFn(selectedUser?.student_code!, user),
     onSuccess: () => {
       setSelectedUser(null);
       toast.success("แก้ไขข้อมูลนิสิตสำเร็จ");
@@ -116,7 +116,7 @@ function ManageStaffPage() {
   return (
     <>
       <UserDialog
-        key={selectedUser?.code}
+        key={selectedUser?.student_code}
         title="แก้ไขข้อมูลนิสิต"
         actionBtnContent="แก้ไข"
         initialData={!!selectedUser ? selectedUser : undefined}

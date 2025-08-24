@@ -28,7 +28,7 @@ export const usersColumns: ColumnDef<User>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "code",
+    accessorKey: "student_code",
     header: "รหัสนิสิต",
   },
   {

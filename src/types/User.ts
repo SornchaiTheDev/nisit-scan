@@ -1,5 +1,5 @@
 export interface User {
-  code: string;
+  student_code: string;
   full_name: string;
   gmail: string;
   major: string;

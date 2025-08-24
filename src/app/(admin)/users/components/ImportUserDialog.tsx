@@ -82,6 +82,15 @@ function ImportUserDialog() {
         <DialogHeader>
           <DialogTitle>Import ข้อมูลนิสิต</DialogTitle>
         </DialogHeader>
+        <div className="px-4 py-2 rounded-lg bg-yellow-200  border border-yellow-500">
+          <h5>รูปแบบการ import ข้อมูลนิสิต</h5>
+          <pre className="mt-2">
+            <code className="bg-gray-50 rounded-lg p-1">
+              student_code,full_name,gmail,major
+            </code>
+          </pre>
+        </div>
+
         <Tabs
           value={selectedTab}
           onValueChange={(tab) => setSelectedTab(tab as Tab)}

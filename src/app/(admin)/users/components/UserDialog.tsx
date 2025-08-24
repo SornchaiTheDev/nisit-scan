@@ -39,7 +39,7 @@ function UserDialog({
   const form = useForm<UserSchema>({
     resolver: zodResolver(userSchema),
     defaultValues: initialData ?? {
-      code: "",
+      student_code: "",
       full_name: "",
       gmail: "",
       major: "",
@@ -68,7 +68,7 @@ function UserDialog({
           <form {...{ onSubmit }} className="space-y-2">
             <FormField
               control={form.control}
-              name="code"
+              name="student_code"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="student-code">รหัสนิสิต</FormLabel>

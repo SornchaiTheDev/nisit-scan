@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { addParticipantFn, getEventFn } from "~/requests/event";
 import BarcodeScanner from "./components/BarcodeScanner";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCodeScanner from "./components/QRCodeScanner";
 import {
   Dialog,
@@ -97,7 +97,7 @@ function EventClient({ name, id, role }: Props) {
     if (user.data && payload) {
       addParticipant.mutate({
         ...payload,
-        student_code: user.data.code,
+        student_code: user.data.student_code,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
