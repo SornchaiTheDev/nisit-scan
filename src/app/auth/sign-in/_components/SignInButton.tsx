@@ -21,7 +21,7 @@ function SignInButton() {
       className="w-[400px] h-12 text-gray-900"
     >
       <Image
-        src={`/${getBasePath()}/icons/google-icon.svg`}
+        src={`${getBasePath()}/icons/google-icon.svg`}
         alt="Google Icon"
         width={24}
         height={24}
