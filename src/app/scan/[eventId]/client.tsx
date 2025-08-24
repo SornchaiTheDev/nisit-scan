@@ -91,17 +91,20 @@ function EventClient({ name, id, role }: Props) {
 
       return getUserByCodeFn(matchedGroup);
     },
+    refetchOnWindowFocus: false,
+    enabled: !!payload,
   });
 
   useEffect(() => {
-    if (user.data && payload) {
+    if (user.isFetching) return;
+    if (payload) {
       addParticipant.mutate({
         ...payload,
-        student_code: user.data.student_code,
+        student_code: user.data?.student_code ?? "",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.data, payload]);
+  }, [user.data, user.isFetching, payload]);
 
   const isNoUserData = !user.isFetching && user.data === null;
 
